@@ -19,27 +19,13 @@ namespace ChatApps
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            readData = "Conected to Chat Server ...";
-            mes();
-            clientSocket.Connect("127.0.0.1", 8899);
-            serverStream = clientSocket.GetStream();
-
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox1.Text + "$");
-            serverStream.Write(outStream, 0, outStream.Length);
-            serverStream.Flush();
-
-            Thread ctThread = new Thread(getMessage);
-            ctThread.Start();
-        }
         private void button2_Click(object sender, EventArgs e)
         {
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox3.Text + "$");
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
-        private void getMessage()
+        /*private void getMessage()
         {
             while (true)
             {
@@ -59,6 +45,6 @@ namespace ChatApps
                 this.Invoke(new MethodInvoker(mes));
             else
                 textBox2.Text = textBox2.Text + Environment.NewLine + " --> " + readData;
-        }
+        }*/
     }
 }

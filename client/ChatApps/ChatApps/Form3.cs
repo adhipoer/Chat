@@ -13,27 +13,21 @@ using System.Threading;
 
 namespace ChatApps
 {
-    public partial class Form2 : Form
+    public partial class Form3 : Form
     {
         System.Net.Sockets.TcpClient clientSocket = new System.Net.Sockets.TcpClient();
         NetworkStream serverStream = default(NetworkStream);
         string readData = null;
-        public Form2()
+        public Form3()
         {
             InitializeComponent();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox1.Text + ";" + textBox2.Text + ";" + "Masuk");
-            serverStream.Write(outStream, 0, outStream.Length);
-            serverStream.Flush();
-        }
-
-        Form3 form3 = new Form3();
         private void button1_Click(object sender, EventArgs e)
         {
-            form3.Show();
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox1.Text + ";" + textBox2.Text + ";" + "Daftar");
+            serverStream.Write(outStream, 0, outStream.Length);
+            serverStream.Flush();
         }
     }
 }

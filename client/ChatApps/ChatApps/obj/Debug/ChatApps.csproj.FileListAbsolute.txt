@@ -7,3 +7,6 @@ C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Deb
 C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache
 C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.exe
 C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.pdb
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form2.resources
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
