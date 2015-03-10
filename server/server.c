@@ -6,7 +6,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "server.h"
 #include "usermanage.h"
 
 #define FILENAME "userpass.txt"
@@ -22,7 +21,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 char usernames[LINES][MAXCHAR];
 char passwords[LINES][MAXCHAR];
 
-List *allusers;
+List *all;
 List *threads;
 
 int servFd;
@@ -31,6 +30,7 @@ void *threadsN(void *);
 int checkUser(char *);
 int checkPass(char *);
 int reg(char *,char *);
+
 int main(int argc, char **argv)
 {
 	if(argc!=2)
@@ -49,15 +49,15 @@ int main(int argc, char **argv)
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in cli_addr;
 	pthread_t *thread;
-	//request *req;
-	//userData *user;
-	allusers = malloc(sizeof(List));
-	threads = malloc(sizeof(List));
-	
+	Request *req;
+	UserData *user;
+	all = (List*)malloc(sizeof(List));
+	threads = (List*)malloc(sizeof(List));
+	all->head = NULL;
+	threads->head = NULL;
+
 	cliLen = sizeof(cli_addr);
 	portNum = atoi(argv[1]);
-	init(allusers);
-	init(threads);
 	
 	int i,j;
 	for(i=0;i<LINES;i++)
@@ -68,13 +68,6 @@ int main(int argc, char **argv)
 			passwords[i][j] = 0;		
 		}
 	}
-
-	fp = fopen(FILENAME, "r");
-	if(fp == NULL)
-	{
-		printf("fopen failed");	
-	}
-
 	servFd = socket(AF_INET, SOCK_STREAM, 0);
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
@@ -88,4 +81,93 @@ int main(int argc, char **argv)
 		printf("failed\n");
 	
 	printf("server started\n");
+
+	while(1)
+	{
+		if((cliFd = accept(servFd, (struct sockaddr *)&cli_addr, (socklen_t *)&cliLen)) < 0)
+			printf("failed\n");
+		req = (Request *)malloc(sizeof(Request));
+		thread = (pthread_t *)malloc(sizeof(pthread_t));
+		
+		req->IP = cli_addr.sin_addr.s_addr;
+		req->sockNum = cliFd;
+		printf("request from %lu sock %d\n", req->IP, req->sockNum);
+		pthread_create(thread, NULL, &threadsN, req);
+		insert(threads, (void *)thread, &mutex);
+	}
+}
+
+void *threadsN(void *arg)
+{
+	pthread_detach(pthread_self());
+	Request *req = (Request *) arg;
+       	int mySock = req->sockNum;
+	unsigned long myIP = req->IP;
+	
+	free(req);
+	FILE *fp;
+	int recvBuffSize;
+	char nameBuff[MAXCHAR];
+	char passBuff[MAXCHAR];
+	char dataRecv[MAXRECV];
+	int nameLen, nameIndex,passRight;
+       	int sendDataLen = 0;
+	int newUser = 1;
+	UserData *currUser = NULL;
+	
+	List *names = (List *)malloc(sizeof(List));
+	names->head = NULL;
+	
+	//LOGIN or REGISTER
+	while(1)
+	{	
+		int y,z;
+		for(z = 0; z<LINES; z++) {
+			for(y = 0; y < MAXCHAR; y++) { 
+				usernames[z][y] = 0;
+				passwords[z][y] = 0;
+			}
+		}
+		memset(dataRecv, 0, MAXRECV);
+		recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+		if(recvBuffSize <=0)
+			sprintf(dataRecv, "logout");
+		char *val;
+		char tmp[10][100];
+		val = strtok(dataRecv, " ");
+		strcpy(tmp[0],val);
+		int i = 1;
+		while(val != NULL)
+		{
+			val = strtok (NULL, " ");
+			strcpy(tmp[i],val);
+			i++;
+		}
+		if(!strcmp(tmp[0], "register"))
+		{
+			fp = fopen(FILENAME, "w");
+	    		if (fp == NULL)       				
+				printf("fopen() failed");
+			fprintf(fp, "%s %s", tmp[1],tmp[2]);
+			fclose(fp);
+       
+		}
+		if(!strcmp(tmp[0], "login"))
+		{
+			fp = fopen(FILENAME, "r");
+			if (fp == NULL)
+				printf("fopen() failed");
+			int a;
+			for(a = 0; a < LINES; a++)
+			{
+				fscanf(fp, "%s %s", usernames[a], passwords[a]);
+				if(!strcmp(usernames[a], val[1]) && !strcmp(passwords[a],val[2]))
+				{
+					write(mySock, "Welcome!\n", 8);	
+				}
+			}
+		}
+
+
+	}
 }

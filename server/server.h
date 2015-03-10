@@ -1,9 +1,9 @@
 #define MAXUSER 100
 #define MAXCHAR 100
 
-typedef struct userData userData;
-
-struct userData{
+typedef struct UserData UserData;
+typedef struct Request Request;
+struct UserData{
 	unsigned long IP;
 	int sockNum;
 	char userName[MAXCHAR];
@@ -11,16 +11,13 @@ struct userData{
 	int loggedIn;
 
 };
-
-typedef struct request request;
-
-struct request{
+struct Request{
 	unsigned long IP;
 	int sockNum;
 };
 
-typedef struct wrongLogin wrongLogin;
-struct wrongLogin{
-	char userName[MAXCHAR];
-	int wrongUser;
-};
+//typedef struct wrongLogin wrongLogin;
+//struct wrongLogin{
+//	char userName[MAXCHAR];
+//	int wrongUser;
+//};

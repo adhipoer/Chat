@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include "usermanage.h"
 
-void init(List *list)
+void initialize(List *list)
 {
 	list->head = NULL;
 }
 
-void insert(List *list, char *dat, pthread_mutex_t *mutex)
+void insert(List *list, void *dat, pthread_mutex_t *mutex)
 {
 	pthread_mutex_lock(mutex);
 	Node *head = list->head;
@@ -18,7 +18,7 @@ void insert(List *list, char *dat, pthread_mutex_t *mutex)
 	list->head =newUser;
 	pthread_mutex_unlock(mutex);
 }
-void* removeItem(List *list,  char *dat, pthread_mutex_t *mutex)
+void* removeItem(List *list,  void *dat, pthread_mutex_t *mutex)
 {
 	pthread_mutex_lock(mutex);
 	Node *curr, *prev;
@@ -65,17 +65,17 @@ void* removeThread(List *list, pthread_t data, pthread_mutex_t *mutex)
 	return NULL;
 }
 
-wrongLogin* findWrongUser(List *, char *, pthread_mutex_t *);
-userData* findUser(List *list, char *name, pthread_mutex_t *mutex)
+//wrongLogin* findWrongUser(List *, char *, pthread_mutex_t *);
+UserData* findUser(List *list, char *name, pthread_mutex_t *mutex)
 {
-	userData *found = NULL;
+	UserData *found = NULL;
 	int len = strlen(name);
 	
 	pthread_mutex_lock(mutex);
 	Node *tmp = list->head;
 	while(tmp)
 	{
-		userData *tmpData = (userData *)tmp->data;
+		UserData *tmpData = (UserData *)tmp->data;
 		if(!strncmp(name, tmpData->userName, len-1))
 		{
 			found = tmpData;
@@ -92,7 +92,7 @@ void allUser(List *list, char *userList, void *ptr, pthread_mutex_t *mutex)
 	Node *tmp = list->head;
 	while(tmp)
 	{
-		userData *data = (userData *)tmp->data;
+		UserData *data = (UserData *)tmp->data;
 		if(data->loggedIn && data!=ptr)
 		{
 			strcat(userList,data->userName);
