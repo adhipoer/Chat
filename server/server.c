@@ -22,7 +22,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 char usernames[LINES][MAXCHAR];
 char passwords[LINES][MAXCHAR];
 
-List *all;
+List *allusers;
 List *threads;
 
 int servFd;
@@ -49,14 +49,43 @@ int main(int argc, char **argv)
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in cli_addr;
 	pthread_t *thread;
-	request *req;
-	userData *user;
-	all= malloc(sizeof(List));
+	//request *req;
+	//userData *user;
+	allusers = malloc(sizeof(List));
 	threads = malloc(sizeof(List));
 	
 	cliLen = sizeof(cli_addr);
-
-
-
+	portNum = atoi(argv[1]);
+	init(allusers);
+	init(threads);
 	
+	int i,j;
+	for(i=0;i<LINES;i++)
+	{
+		for(j=0;j<MAXCHAR;j++)
+		{
+			usernames[i][j] = 0;
+			passwords[i][j] = 0;		
+		}
+	}
+
+	fp = fopen(FILENAME, "r");
+	if(fp == NULL)
+	{
+		printf("fopen failed");	
+	}
+
+	servFd = socket(AF_INET, SOCK_STREAM, 0);
+	memset(&serv_addr, 0, sizeof(serv_addr));
+
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_addr.s_addr= inet_addr("10.151.36.55");
+	serv_addr.sin_port = htons(portNum);
+
+	if(bind(servFd,(struct sockaddr *)&serv_addr, sizeof(serv_addr))<0)
+		printf("failed\n");
+	if(listen(servFd,MAXUSER)< 0)
+		printf("failed\n");
+	
+	printf("server started\n");
 }
