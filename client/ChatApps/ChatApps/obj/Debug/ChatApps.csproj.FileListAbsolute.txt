@@ -1,1 +1,9 @@
 c:\users\adhipur\documents\visual studio 2013\Projects\ChatApps\ChatApps\bin\Debug\ChatApps.exe.config
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\bin\Debug\ChatApps.exe
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\bin\Debug\ChatApps.pdb
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.csprojResolveAssemblyReference.cache
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form1.resources
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Properties.Resources.resources
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.exe
+C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.pdb
