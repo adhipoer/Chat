@@ -1,20 +1,22 @@
 #include <stdio.h>
 #include <pthread.h>  
+#include "server.h"
 
-typedef struct user user;
-typedef struct list list;
+typedef struct Node Node;
+typedef struct List List;
 
-struct user{
-	user *next;
-	char *username;
-	char *userpass;
+struct Node{
+	Node *next;
+	char *data;
 };
-struct list{
-	user *head;
+struct List{
+	Node *head;
 };
 
-void init(list *);
-void adduser(list *, char *, char *, pthread_mutex_t *);
-void* removeItem(list *,  char *, char *, pthread_mutex_t *);
-void* removeThread(list *list, pthread_t data, pthread_mutex_t *mutex);
-int find(list *, char *, char *, pthread_mutex_t *);
+void init(List *);
+void insert(List *, char *, pthread_mutex_t *);
+void* removeItem(List *,  char *, pthread_mutex_t *);
+void* removeThread(List *, pthread_t data, pthread_mutex_t *mutex);
+wrongLogin* findWrongUser(List *, char *, pthread_mutex_t *);
+userData* findUser(List *, char *,pthread_mutex_t * );
+void allUser(List *, char *, void *, pthread_mutex_t *);

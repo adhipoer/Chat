@@ -16,3 +16,9 @@ typedef struct request
 	unsigned long IP;
 	int sockNum;
 }request;
+
+typedef struct wrongLogin
+{
+	char userName[MAXCHAR];
+	int wrongUser;
+}wrongLogin;
