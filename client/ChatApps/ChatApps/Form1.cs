@@ -19,12 +19,17 @@ namespace ChatApps
             InitializeComponent();
         }
 
+        private Form2 otherForm1;
+        private Form4 otherForm2;
+
         private void button2_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox3.Text + "$");
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(otherForm1.TextBox1.Text + ";" + otherForm2.list.SelectedItems + ";" + textBox3.Text + ";" + "MESSAGE");
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
+        
+
         /*private void getMessage()
         {
             while (true)

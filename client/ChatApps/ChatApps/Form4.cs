@@ -29,5 +29,12 @@ namespace ChatApps
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
+        public ListView list
+        {
+            get
+            {
+                return listView1;
+            }
+        }
     }
 }
