@@ -2,14 +2,17 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <pthread.h>
+
 #include "usermanage.h"
 
 #define FILENAME "userpass.txt"
 #define MAXRECV 1000
+#define MSG	1000
 #define LINES	100
 #define ALLUSER	7
 #define LOGIN	5
@@ -39,20 +42,18 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	int a;
 	int cliFd;
 	int portNum;
 	int cliLen;
-
-	FILE *fp;
 
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in cli_addr;
 	pthread_t *thread;
 	Request *req;
-	UserData *user;
-	all = (List*)malloc(sizeof(List));
-	threads = (List*)malloc(sizeof(List));
+	all = (List *)malloc(sizeof(List));
+	
+	threads =(List *) malloc(sizeof(List ));
+	
 	all->head = NULL;
 	threads->head = NULL;
 
@@ -93,7 +94,7 @@ int main(int argc, char **argv)
 		req->sockNum = cliFd;
 		printf("request from %lu sock %d\n", req->IP, req->sockNum);
 		pthread_create(thread, NULL, &threadsN, req);
-		insert(threads, (void *)thread, &mutex);
+		addNew(threads, (void *)thread, &mutex);
 	}
 }
 
@@ -106,68 +107,107 @@ void *threadsN(void *arg)
 	
 	free(req);
 	FILE *fp;
+    
 	int recvBuffSize;
+    char signbuff[MAXCHAR];
 	char nameBuff[MAXCHAR];
 	char passBuff[MAXCHAR];
 	char dataRecv[MAXRECV];
+    char message[MSG];
 	int nameLen, nameIndex,passRight;
-       	int sendDataLen = 0;
+    int sendDataLen = 0;
 	int newUser = 1;
 	UserData *currUser = NULL;
 	
 	List *names = (List *)malloc(sizeof(List));
 	names->head = NULL;
 	
-	//LOGIN or REGISTER
-	while(1)
-	{	
-		int y,z;
+	memset(dataRecv, 0, MAXRECV);
+	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+    printf("%s\n", dataRecv);
+    sscanf(dataRecv, "%s %s %s", signbuff, nameBuff, passBuff);
+    printf("%s\n", signbuff);
+    printf("%s\n", nameBuff);
+    printf("%s\n", passBuff);
+    //printf("%s\n", message);
+
+        int y,z;
 		for(z = 0; z<LINES; z++) {
 			for(y = 0; y < MAXCHAR; y++) { 
 				usernames[z][y] = 0;
 				passwords[z][y] = 0;
 			}
 		}
-		memset(dataRecv, 0, MAXRECV);
-		recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
-		if(recvBuffSize <=0)
-			sprintf(dataRecv, "logout");
-		char *val;
-		char tmp[10][100];
-		val = strtok(dataRecv, " ");
-		strcpy(tmp[0],val);
-		int i = 1;
-		while(val != NULL)
-		{
-			val = strtok (NULL, " ");
-			strcpy(tmp[i],val);
-			i++;
-		}
-		if(!strcmp(tmp[0], "register"))
+		if(!strcmp(signbuff, "register"))
 		{
 			fp = fopen(FILENAME, "w");
 	    		if (fp == NULL)       				
 				printf("fopen() failed");
-			fprintf(fp, "%s %s", tmp[1],tmp[2]);
+			fprintf(fp, "%s %s", nameBuff,passBuff);
 			fclose(fp);
-       
 		}
-		if(!strcmp(tmp[0], "login"))
+		else if(!strcmp(signbuff, "login"))
 		{
 			fp = fopen(FILENAME, "r");
 			if (fp == NULL)
 				printf("fopen() failed");
+			printf("halo");
 			int a;
 			for(a = 0; a < LINES; a++)
 			{
 				fscanf(fp, "%s %s", usernames[a], passwords[a]);
-				if(!strcmp(usernames[a], val[1]) && !strcmp(passwords[a],val[2]))
+
+				if(usernames[a] == nameBuff && passwords[a]==passBuff)
 				{
-					write(mySock, "Welcome!\n", 8);	
+					currUser = findUser(all, (char *)nameBuff, &mutex);
+					if(currUser){
+						if(currUser->loggedIn){
+                            write(mySock, "use already login\n", 23);			
+						continue;
+						}
+					
+						newUser=0;
+						break;
+					}	
 				}
+
 			}
-		}
+			if(newUser){
+				currUser = (UserData *)malloc(sizeof(UserData));
+				memset(currUser, 0, sizeof(UserData));
+				currUser->IP = myIP;
+				currUser->sockNum = mySock;
+				strcpy(currUser->userName, (char *) nameBuff);
+				strcpy(currUser->userPass, (char *) passBuff);
+				currUser->loggedIn = 1;
+				addNew(all, (void *)currUser, &mutex);
 
+			}
+			else
+			{
+				currUser->IP = myIP;
+				currUser->sockNum = mySock;
+				currUser->loggedIn = 1;
+			}
 
+			/*while(1)
+			{
+				if(!strcmp(signbuff, "message")
+				{
+					char user[MAXCHAR];
+
+					char tmpbuff[MSG];
+					memset(user, 0, MAXCHAR);
+					memset(message, 0, MSG);
+					
+					int msglen = strlen(tmp[3]);
+					UserData *toUser = findUser(all, passBuff, &mutex);
+					if(toUser && toUser !=currUser)
+					{
+						
+					}																				
+				}
+			}*/
+		recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
 	}
 }

@@ -8,7 +8,7 @@ void initialize(List *list)
 	list->head = NULL;
 }
 
-void insert(List *list, void *dat, pthread_mutex_t *mutex)
+void addNew(List *list, void* dat, pthread_mutex_t *mutex)
 {
 	pthread_mutex_lock(mutex);
 	Node *head = list->head;
