@@ -25,7 +25,9 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox1.Text + ";" + textBox2.Text + ";" + "LOGIN");
+            clientSocket.Connect("10.151.36.55", 1212);
+            serverStream = clientSocket.GetStream();
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login " + textBox1.Text + " " + textBox2.Text.GetHashCode());
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
@@ -41,6 +43,7 @@ namespace ChatApps
         Form3 form3 = new Form3();
         private void button1_Click(object sender, EventArgs e)
         {
+            
             form3.Show();
         }
     }

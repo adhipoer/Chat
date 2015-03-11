@@ -124,12 +124,14 @@ void *threadsN(void *arg)
 	
 	memset(dataRecv, 0, MAXRECV);
 	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
-    printf("%s\n", dataRecv);
-    sscanf(dataRecv, "%s %s %s", signbuff, nameBuff, passBuff);
-    printf("%s\n", signbuff);
-    printf("%s\n", nameBuff);
-    printf("%s\n", passBuff);
-    //printf("%s\n", message);
+    
+    while (recvBuffSize != 0){
+        printf("%s\n", dataRecv);
+        sscanf(dataRecv, "%s %s %s %[^\n]", signbuff, nameBuff, passBuff, message);
+        //printf("%s\n", signbuff);
+        //printf("%s\n", nameBuff);
+        //printf("%s\n", passBuff);
+        //printf("%s\n", message);
 
         int y,z;
 		for(z = 0; z<LINES; z++) {
@@ -140,13 +142,15 @@ void *threadsN(void *arg)
 		}
 		if(!strcmp(signbuff, "register"))
 		{
-			fp = fopen(FILENAME, "w");
+			fp = fopen(FILENAME, "a");
 	    		if (fp == NULL)       				
 				printf("fopen() failed");
-			fprintf(fp, "%s %s", nameBuff,passBuff);
+			fprintf(fp, "%s %s\n", nameBuff,passBuff);
 			fclose(fp);
+            
 		}
-		else if(!strcmp(signbuff, "login"))
+        printf("mau masuk");
+		if(!strcmp(signbuff, "login"))
 		{
 			fp = fopen(FILENAME, "r");
 			if (fp == NULL)
@@ -155,7 +159,8 @@ void *threadsN(void *arg)
 			int a;
 			for(a = 0; a < LINES; a++)
 			{
-				fscanf(fp, "%s %s", usernames[a], passwords[a]);
+				fscanf(fp, "%s %s\n", usernames[a], passwords[a]);
+                printf("%s %s\n", usernames[a], passwords[a]);
 
 				if(usernames[a] == nameBuff && passwords[a]==passBuff)
 				{
@@ -172,6 +177,7 @@ void *threadsN(void *arg)
 				}
 
 			}
+            printf("ini sudah masuk login lho :D");
 			if(newUser){
 				currUser = (UserData *)malloc(sizeof(UserData));
 				memset(currUser, 0, sizeof(UserData));
@@ -208,6 +214,8 @@ void *threadsN(void *arg)
 					}																				
 				}
 			}*/
-		recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+        }
+        printf("mau masuk2\n");
+        recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
 	}
 }
