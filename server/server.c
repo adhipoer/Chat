@@ -128,10 +128,6 @@ void *threadsN(void *arg)
     while (recvBuffSize != 0){
         printf("%s\n", dataRecv);
         sscanf(dataRecv, "%s %s %s %[^\n]", signbuff, nameBuff, passBuff, message);
-        //printf("%s\n", signbuff);
-        //printf("%s\n", nameBuff);
-        //printf("%s\n", passBuff);
-        //printf("%s\n", message);
 
         int y,z;
 		for(z = 0; z<LINES; z++) {
@@ -149,13 +145,12 @@ void *threadsN(void *arg)
 			fclose(fp);
             
 		}
-        printf("mau masuk");
 		if(!strcmp(signbuff, "login"))
 		{
 			fp = fopen(FILENAME, "r");
 			if (fp == NULL)
 				printf("fopen() failed");
-			printf("halo");
+			
 			int a;
 			for(a = 0; a < LINES; a++)
 			{
@@ -175,9 +170,8 @@ void *threadsN(void *arg)
 						break;
 					}	
 				}
-
+`
 			}
-            printf("ini sudah masuk login lho :D");
 			if(newUser){
 				currUser = (UserData *)malloc(sizeof(UserData));
 				memset(currUser, 0, sizeof(UserData));
@@ -195,10 +189,10 @@ void *threadsN(void *arg)
 				currUser->sockNum = mySock;
 				currUser->loggedIn = 1;
 			}
-
-			/*while(1)
+            recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+			while(recvBuffSize!=0)
 			{
-				if(!strcmp(signbuff, "message")
+				if(!strcmp(signbuff, "private")
 				{
 					char user[MAXCHAR];
 
@@ -206,16 +200,22 @@ void *threadsN(void *arg)
 					memset(user, 0, MAXCHAR);
 					memset(message, 0, MSG);
 					
-					int msglen = strlen(tmp[3]);
+					int msglen = strlen(message);
 					UserData *toUser = findUser(all, passBuff, &mutex);
 					if(toUser && toUser !=currUser)
 					{
-						
+						if(toUser->loggedIn)
+                        {
+                            write(toUser->socknum, "\n", 1);
+                            write(toUser->socknum, message, msglen);
+                            write(toUser->sockNum,"\n\n", 2);
+                        }
 					}																				
 				}
-			}*/
+                recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+			}
         }
-        printf("mau masuk2\n");
+        
         recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
 	}
 }
