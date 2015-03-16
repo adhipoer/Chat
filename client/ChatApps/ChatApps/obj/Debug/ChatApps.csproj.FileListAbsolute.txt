@@ -22,3 +22,15 @@ D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Properties.Resources.r
 D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache
 D:\kuliah\KIJ\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe
 D:\kuliah\KIJ\client\ChatApps\ChatApps\bin\Debug\ChatApps.pdb
+F:\GIT\Chat\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe.config
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.exe
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.pdb
+F:\GIT\Chat\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe
+F:\GIT\Chat\client\ChatApps\ChatApps\bin\Debug\ChatApps.pdb
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.csprojResolveAssemblyReference.cache
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form1.resources
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form2.resources
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Properties.Resources.resources
+F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache

@@ -21,10 +21,11 @@ namespace ChatApps
         public Form4()
         {
             InitializeComponent();
+            textBox1.Text = otherForm1.TextBox1.Text;
         }
 
         private Form2 otherForm1;
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("alluser");
@@ -42,6 +43,13 @@ namespace ChatApps
         private void button2_Click(object sender, EventArgs e)
         {
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("private" + " " + otherForm1.TextBox1.Text + " " + listView1.SelectedItems + " " + textBox1.Text);
+            serverStream.Write(outStream, 0, outStream.Length);
+            serverStream.Flush();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("logout");
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
