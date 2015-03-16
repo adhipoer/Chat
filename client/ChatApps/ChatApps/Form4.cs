@@ -23,6 +23,8 @@ namespace ChatApps
             InitializeComponent();
         }
 
+        private Form2 otherForm1;
+
         private void button1_Click(object sender, EventArgs e)
         {
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes(listView1.SelectedItems + ";" + "ListUSer");
@@ -35,6 +37,13 @@ namespace ChatApps
             {
                 return listView1;
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(otherForm1.TextBox1.Text + ";" + listView1.SelectedItems + ";" + textBox3.Text + ";" + "MESSAGE");
+            serverStream.Write(outStream, 0, outStream.Length);
+            serverStream.Flush();
         }
     }
 }
