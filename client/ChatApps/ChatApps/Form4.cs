@@ -27,7 +27,7 @@ namespace ChatApps
 
         private void button1_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(listView1.SelectedItems + ";" + "ListUSer");
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(listView1.SelectedItems);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }

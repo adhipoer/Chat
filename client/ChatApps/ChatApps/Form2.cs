@@ -25,7 +25,7 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(textBox1.Text + ";" + textBox2.Text + ";" + "LOGIN");
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login" + " " + textBox1.Text + " " + textBox2.Text);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }

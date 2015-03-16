@@ -170,7 +170,7 @@ void *threadsN(void *arg)
 						break;
 					}	
 				}
-`
+
 			}
 			if(newUser){
 				currUser = (UserData *)malloc(sizeof(UserData));
@@ -190,13 +190,13 @@ void *threadsN(void *arg)
 				currUser->loggedIn = 1;
 			}
             recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
-			while(recvBuffSize!=0)
+			while( recvBuffSize!=0 )
 			{
-				if(!strcmp(signbuff, "private")
+				if(!strcmp(signbuff, "private"))
 				{
 					char user[MAXCHAR];
 
-					char tmpbuff[MSG];
+					//char tmpBuff[MSG];
 					memset(user, 0, MAXCHAR);
 					memset(message, 0, MSG);
 					
@@ -206,16 +206,27 @@ void *threadsN(void *arg)
 					{
 						if(toUser->loggedIn)
                         {
-                            write(toUser->socknum, "\n", 1);
-                            write(toUser->socknum, message, msglen);
+                            write(toUser->sockNum, "\n", 1);
+                            write(toUser->sockNum, message, msglen);
                             write(toUser->sockNum,"\n\n", 2);
                         }
 					}																				
 				}
+                
+                if(!strcmp(signbuff, "alluser"))
+                {
+                    write(mySock, "\n",1);
+                    char listAllUser[MAXCHAR*MAXCHAR+MAXCHAR];
+                    memset(listAllUser,0 , MAXCHAR*MAXCHAR+MAXCHAR);
+                    allUser(all, listAllUser,(void *)currUser, &mutex);
+                    sendDataLen = strlen(listAllUser);
+                    write(mySock, listAllUser, sendDataLen);
+                    write(mySock, "\n", 1);
+                    continue;
+                }
                 recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
-			}
+            }
         }
-        
         recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
 	}
 }

@@ -10,3 +10,13 @@ C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Deb
 C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form2.resources
 C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
 C:\Users\ADHIPUR\documents\visual studio 2013\Projects\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
+D:\kuliah\KIJ\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe.config
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.exe
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.pdb
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.csprojResolveAssemblyReference.cache
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form1.resources
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form2.resources
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Properties.Resources.resources
+D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache
