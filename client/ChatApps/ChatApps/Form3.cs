@@ -37,9 +37,10 @@ namespace ChatApps
             int bytes = serverStream.Read(inStream, 0, inStream.Length);
             responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
             MessageBox.Show(responseData);
+            this.Close();
             Form2 form2 = new Form2();
             form2.Show();
-            this.Hide();
+            
         }
     }
 }

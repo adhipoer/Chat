@@ -25,9 +25,9 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            clientSocket.Connect("10.151.36.55", 1234);
+            clientSocket.Connect("10.151.36.55", 1233);
             serverStream = clientSocket.GetStream();
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login" + " " + textBox1.Text + " " + textBox2.Text);
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login " + textBox1.Text + " " + textBox2.Text);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
             
@@ -40,12 +40,14 @@ namespace ChatApps
 
             if (responseData == "success")
             {
-                Form4 form4 = new Form4();
+                Form4 form4 = new Form4(serverStream);
                 form4.Show();
             }
             else if(responseData == "failed")
             {
                 MessageBox.Show("anda sudah login");
+                Form4 form4 = new Form4(serverStream);
+                form4.Show();
             }
             else
                 MessageBox.Show("anda siapa?");
