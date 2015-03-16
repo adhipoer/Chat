@@ -25,6 +25,8 @@ namespace ChatApps
 
         private void button1_Click(object sender, EventArgs e)
         {
+            clientSocket.Connect("10.151.36.55", 1234);
+            serverStream = clientSocket.GetStream();
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("register" + " " + textBox1.Text + " " + textBox2.Text);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();

@@ -125,11 +125,12 @@ void *threadsN(void *arg)
 	memset(dataRecv, 0, MAXRECV);
 	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
     
-    while (recvBuffSize != 0){
-        printf("%s\n", dataRecv);
-        sscanf(dataRecv, "%s %s %s %[^\n]", signbuff, nameBuff, passBuff, message);
+    	while (recvBuffSize != 0)
+	{
+        	printf("%s\n", dataRecv);
+        	sscanf(dataRecv, "%s %s %s %[^\n]", signbuff, nameBuff, passBuff, message);
 
-        int y,z;
+        	int y,z;
 		for(z = 0; z<LINES; z++) {
 			for(y = 0; y < MAXCHAR; y++) { 
 				usernames[z][y] = 0;
@@ -143,6 +144,7 @@ void *threadsN(void *arg)
 				printf("fopen() failed");
 			fprintf(fp, "%s %s\n", nameBuff,passBuff);
 			fclose(fp);
+
             
 		}
 		if(!strcmp(signbuff, "login"))
@@ -155,20 +157,21 @@ void *threadsN(void *arg)
 			for(a = 0; a < LINES; a++)
 			{
 				fscanf(fp, "%s %s\n", usernames[a], passwords[a]);
-                printf("%s %s\n", usernames[a], passwords[a]);
+                		printf("%s %s\n", usernames[a], passwords[a]);
 
 				if(usernames[a] == nameBuff && passwords[a]==passBuff)
 				{
 					currUser = findUser(all, (char *)nameBuff, &mutex);
 					if(currUser){
 						if(currUser->loggedIn){
-                            write(mySock, "use already login\n", 23);			
+                            				write(mySock, "failed\n", 6);			
 						continue;
 						}
 					
 						newUser=0;
 						break;
-					}	
+					}
+					write(currUser->sockNum, "success\n", 7);	
 				}
 
 			}
@@ -189,14 +192,15 @@ void *threadsN(void *arg)
 				currUser->sockNum = mySock;
 				currUser->loggedIn = 1;
 			}
-            recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
-			while( recvBuffSize!=0 )
-			{
+		write(currUser->sockNum, "success\n", 7);
+            	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+		while( recvBuffSize!=0 )
+		{
 				if(!strcmp(signbuff, "private"))
 				{
 					char user[MAXCHAR];
 
-					//char tmpBuff[MSG];
+					char tmpbuff[MSG];
 					memset(user, 0, MAXCHAR);
 					memset(message, 0, MSG);
 					
@@ -223,6 +227,18 @@ void *threadsN(void *arg)
                     write(mySock, listAllUser, sendDataLen);
                     write(mySock, "\n", 1);
                     continue;
+                }
+                if(!strcmp(signbuff, "logout"))
+                {
+                    currUser->loggedIn=0;
+
+                    if(recvBuffSize<0)   
+                        write(mySock, "Logging off. Timed out.\n", 24);
+                    else
+                        write(mySock, "Logging off.\n", 13);
+                    
+                    close(currUser->sockNum);
+                    break;
                 }
                 recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
             }

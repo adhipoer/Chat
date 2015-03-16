@@ -20,3 +20,5 @@ D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
 D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
 D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.Properties.Resources.resources
 D:\kuliah\KIJ\client\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache
+D:\kuliah\KIJ\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe
+D:\kuliah\KIJ\client\ChatApps\ChatApps\bin\Debug\ChatApps.pdb

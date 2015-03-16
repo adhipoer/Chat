@@ -25,9 +25,31 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
+            clientSocket.Connect("10.151.36.55", 1234);
+            serverStream = clientSocket.GetStream();
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login" + " " + textBox1.Text + " " + textBox2.Text);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
+            
+            byte[] inStream = new Byte[256];
+            // String to store the response ASCII representation.
+            String responseData = String.Empty;
+            // Read the first batch of the TcpServer response bytes.
+            int bytes = serverStream.Read(inStream, 0, inStream.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
+
+            if (responseData == "success")
+            {
+                Form4 form4 = new Form4();
+                form4.Show();
+            }
+            else if(responseData == "failed")
+            {
+                MessageBox.Show("anda sudah login");
+            }
+            else
+                MessageBox.Show("anda siapa?");
+
         }
 
         public TextBox TextBox1

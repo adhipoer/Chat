@@ -27,7 +27,7 @@ namespace ChatApps
 
         private void button1_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(listView1.SelectedItems);
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("alluser");
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
@@ -41,7 +41,7 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(otherForm1.TextBox1.Text + ";" + listView1.SelectedItems + ";" + textBox3.Text + ";" + "MESSAGE");
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("private" + " " + otherForm1.TextBox1.Text + " " + listView1.SelectedItems + " " + textBox1.Text);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }
