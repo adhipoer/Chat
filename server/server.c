@@ -125,7 +125,7 @@ void *threadsN(void *arg)
 	memset(dataRecv, 0, MAXRECV);
 	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
     
-    	while (recvBuffSize != 0)
+    while (recvBuffSize != 0)
 	{
         	printf("%s\n", dataRecv);
         	sscanf(dataRecv, "%s %s %s %[^\n]", signbuff, nameBuff, passBuff, message);
@@ -143,10 +143,11 @@ void *threadsN(void *arg)
 	    		if (fp == NULL)       				
 				printf("fopen() failed");
 			fprintf(fp, "%s %s\n", nameBuff,passBuff);
-			fclose(fp);
-
-            
+            fclose(fp);
+            write(mySock, "Selamat, anda sudah terdaftar\n", 29);
+			break;
 		}
+
 		if(!strcmp(signbuff, "login"))
 		{
 			fp = fopen(FILENAME, "r");
@@ -154,12 +155,18 @@ void *threadsN(void *arg)
 				printf("fopen() failed");
 			
 			int a;
-			for(a = 0; a < LINES; a++)
+			for(a = 0; a < LINES-1; a++)
 			{
 				fscanf(fp, "%s %s\n", usernames[a], passwords[a]);
-                		printf("%s %s\n", usernames[a], passwords[a]);
+                printf("%s %s\n", usernames[a], passwords[a]);
 
-				if(usernames[a] == nameBuff && passwords[a]==passBuff)
+			}
+            fclose(fp);
+            
+            int i;
+            for(i = 0; i<LINES-1;i++)
+            {
+                if(usernames[a] == nameBuff && passwords[a]==passBuff)
 				{
 					currUser = findUser(all, (char *)nameBuff, &mutex);
 					if(currUser){
@@ -171,10 +178,16 @@ void *threadsN(void *arg)
 						newUser=0;
 						break;
 					}
-					write(currUser->sockNum, "success\n", 7);	
+						
 				}
-
-			}
+				else
+                {
+				    write(currUser->sockNum, "who?\n", 4);
+                    continue;
+                }
+                printf("halo\n");
+            }
+            printf("halo2\n");
 			if(newUser){
 				currUser = (UserData *)malloc(sizeof(UserData));
 				memset(currUser, 0, sizeof(UserData));
@@ -184,7 +197,7 @@ void *threadsN(void *arg)
 				strcpy(currUser->userPass, (char *) passBuff);
 				currUser->loggedIn = 1;
 				addNew(all, (void *)currUser, &mutex);
-
+                write(currUser->sockNum, "success\n", 7);     
 			}
 			else
 			{
@@ -192,8 +205,8 @@ void *threadsN(void *arg)
 				currUser->sockNum = mySock;
 				currUser->loggedIn = 1;
 			}
-		write(currUser->sockNum, "success\n", 7);
-            	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
+		//write(currUser->sockNum, "success\n", 7);
+        recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
 		while( recvBuffSize!=0 )
 		{
 				if(!strcmp(signbuff, "private"))

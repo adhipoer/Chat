@@ -30,6 +30,16 @@ namespace ChatApps
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("register" + " " + textBox1.Text + " " + textBox2.Text);
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
+            byte[] inStream = new Byte[256];
+            // String to store the response ASCII representation.
+            String responseData = String.Empty;
+            // Read the first batch of the TcpServer response bytes.
+            int bytes = serverStream.Read(inStream, 0, inStream.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
+            MessageBox.Show(responseData);
+            Form2 form2 = new Form2();
+            form2.Show();
+            this.Hide();
         }
     }
 }
