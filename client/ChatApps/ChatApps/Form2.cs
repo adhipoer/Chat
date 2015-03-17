@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -25,7 +24,7 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            clientSocket.Connect("10.151.36.55", 1233);
+            clientSocket.Connect("10.151.36.55", 1234);
             serverStream = clientSocket.GetStream();
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login " + textBox1.Text + " " + textBox2.Text);
             serverStream.Write(outStream, 0, outStream.Length);
@@ -37,16 +36,18 @@ namespace ChatApps
             // Read the first batch of the TcpServer response bytes.
             int bytes = serverStream.Read(inStream, 0, inStream.Length);
             responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
-
+            
             if (responseData == "success")
             {
-                Form4 form4 = new Form4(serverStream);
+                //readData = " " + responseData;
+                Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
                 form4.Show();
             }
             else if(responseData == "failed")
             {
                 MessageBox.Show("anda sudah login");
-                Form4 form4 = new Form4(serverStream);
+                //readData = " " + responseData;
+                Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
                 form4.Show();
             }
             else

@@ -33,6 +33,8 @@ void *threadsN(void *);
 int checkUser(char *);
 int checkPass(char *);
 int reg(char *,char *);
+void Die(char *message);
+void threadCleanup(void *arg);
 
 int main(int argc, char **argv)
 {
@@ -77,22 +79,26 @@ int main(int argc, char **argv)
 	serv_addr.sin_port = htons(portNum);
 
 	if(bind(servFd,(struct sockaddr *)&serv_addr, sizeof(serv_addr))<0)
-		printf("failed\n");
+		Die("Bind failed\n");
+    else
+        printf("Bind success\n");
 	if(listen(servFd,MAXUSER)< 0)
-		printf("failed\n");
+		Die("Listen failed\n");
+	else
+        printf("listen success\n");
 	
 	printf("server started\n");
 
 	while(1)
 	{
 		if((cliFd = accept(servFd, (struct sockaddr *)&cli_addr, (socklen_t *)&cliLen)) < 0)
-			printf("failed\n");
+			Die("accept failed\n");
 		req = (Request *)malloc(sizeof(Request));
 		thread = (pthread_t *)malloc(sizeof(pthread_t));
 		
-		req->IP = cli_addr.sin_addr.s_addr;
+		strcpy(req->IP,inet_ntoa(cli_addr.sin_addr));
 		req->sockNum = cliFd;
-		printf("request from %lu sock %d\n", req->IP, req->sockNum);
+		printf("request from %s sock %d\n", req->IP, req->sockNum);
 		pthread_create(thread, NULL, &threadsN, req);
 		addNew(threads, (void *)thread, &mutex);
 	}
@@ -103,19 +109,19 @@ void *threadsN(void *arg)
 	pthread_detach(pthread_self());
 	Request *req = (Request *) arg;
        	int mySock = req->sockNum;
-	unsigned long myIP = req->IP;
+	char myIP[MAXCHAR];
+	strcpy(myIP, req->IP);
 	
 	free(req);
 	FILE *fp;
     
 	int recvBuffSize;
-    char signbuff[MAXCHAR];
+    	char signbuff[MAXCHAR];
 	char nameBuff[MAXCHAR];
 	char passBuff[MAXCHAR];
 	char dataRecv[MAXRECV];
-    char message[MSG];
-	int nameLen, nameIndex,passRight;
-    int sendDataLen = 0;
+    	char message[MSG];
+	int sendDataLen = 0;
 	int newUser = 1;
 	UserData *currUser = NULL;
 	
@@ -125,14 +131,14 @@ void *threadsN(void *arg)
 	memset(dataRecv, 0, MAXRECV);
 	recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
     
-    while (recvBuffSize != 0)
+    	while (recvBuffSize != 0)
 	{
         	printf("%s\n", dataRecv);
         	sscanf(dataRecv, "%s %s %s %[^\n]", signbuff, nameBuff, passBuff, message);
-            printf("%s\n", signbuff);
-            printf("%s\n", nameBuff);
-            printf("%s\n", passBuff);
-            printf("%s\n", message);
+            	printf("%s\n", signbuff);
+            	printf("%s\n", nameBuff);
+            	printf("%s\n", passBuff);
+            	printf("%s\n", message);
         
         	int y,z;
 		    for(z = 0; z<LINES; z++) {
@@ -186,7 +192,7 @@ void *threadsN(void *arg)
                         printf("2\n");
                         currUser = (UserData *)malloc(sizeof(UserData));
                         memset(currUser, 0, sizeof(UserData));
-                        currUser->IP = myIP;
+                        strcpy(currUser->IP,myIP);
                         currUser->sockNum = mySock;
                         strcpy(currUser->userName, (char *) nameBuff);
                         strcpy(currUser->userPass, (char *) passBuff);
@@ -197,19 +203,19 @@ void *threadsN(void *arg)
                     }
                     else
                     {
-                        currUser->IP = myIP;
+                        strcpy(currUser->IP,myIP);
                         currUser->sockNum = mySock;
                         currUser->loggedIn = 1;
                     }
                     break;
                 }
             }
-            printf("3\n");
+            //printf("3\n");
                     memset(dataRecv, 0, MAXRECV);
                     recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
                     while( recvBuffSize!=0 )
                     {       
-                            printf("4\n");
+                            //printf("4\n");
                             if(!strcmp(signbuff, "private"))
                             {
                                 char user[MAXCHAR];
@@ -260,4 +266,21 @@ void *threadsN(void *arg)
         }
         recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
 	}
+}
+
+void Die(char *message) {
+  //Cancelling all running threads
+  cancelThreads(threads);
+  //deleteListWithMessage(allUsers, logoffMessage);
+  free(all);
+  deleteList(threads);
+  free(threads);
+  printf("%s\n", message);
+  exit(1);
+}
+
+void threadCleanup(void *arg) {
+  printf("In the thread cleanup handler\n");
+  deleteList(arg);
+  free(arg);
 }

@@ -4,7 +4,7 @@
 typedef struct UserData UserData;
 typedef struct Request Request;
 struct UserData{
-	unsigned long IP;
+	char IP[MAXCHAR];
 	int sockNum;
 	char userName[MAXCHAR];
 	char userPass[MAXCHAR];
@@ -12,7 +12,7 @@ struct UserData{
 
 };
 struct Request{
-	unsigned long IP;
+	char IP[MAXCHAR];
 	int sockNum;
 };
 

@@ -21,3 +21,5 @@ void *removeThread(List *, pthread_t data, pthread_mutex_t *mutex);
 //wrongLogin *findWrongUser(List *, char *, pthread_mutex_t *);
 UserData *findUser(List *, char *, pthread_mutex_t * );
 void allUser(List *, char *, void *, pthread_mutex_t *);
+void deleteList(List *);
+void cancelThreads(List *);

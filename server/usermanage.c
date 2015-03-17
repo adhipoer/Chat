@@ -103,3 +103,29 @@ void allUser(List *list, char *userList, void *ptr, pthread_mutex_t *mutex)
 	pthread_mutex_unlock(mutex);
 }
 
+void *popFront(List *list) { 
+  if (!list->head) 
+    return NULL; 
+  struct Node *oldHead = list->head; 
+  list->head = oldHead->next; 
+  void *data = oldHead->data; 
+  free(oldHead); 
+  return data; 
+}
+void deleteList(List *list) {
+  while (list->head) {
+    void *temp = popFront(list);
+    free(temp);
+  }
+}
+
+void cancelThreads(List *list) {
+  Node *temp = list->head;
+  while(temp) {
+    pthread_t *thread = (pthread_t *)temp->data;
+    printf("Cancelling thread %ld\n", *thread);
+    pthread_cancel(*thread);
+    temp=temp->next;
+  }
+}
+
