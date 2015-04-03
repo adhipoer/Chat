@@ -1,0 +1,174 @@
+ public void rsa()
+        {
+            long p, q;
+            if (Pvalue == null)
+            {
+                 p = get_prime();
+                Pvalue = Convert.ToString(p);
+            }
+            else p = Convert.ToInt64(Pvalue);
+
+            if (Qvalue == null)
+            {
+
+                 q = get_prime();
+
+                Qvalue = Convert.ToString(q);
+            }
+            else q = Convert.ToInt64(Qvalue);
+
+            // Second part
+
+            long n = p * q;
+
+            long PHI = (p - 1) * (q - 1);
+            long ev = getRandomEv(PHI);
+
+            Nvalue = Convert.ToString(n) + " which is ("+p+")*("+q+")";
+            PHIvalue = Convert.ToString(PHI) + " which is (" + p + "-1)*(" + q + "-1)";
+            Evalue = Convert.ToString(ev);
+
+            // Third part
+
+            message = "32";
+
+            long m = Convert.ToInt64(message);
+
+            long c = exp_calc(m, n, ev);
+
+            encrypted= Convert.ToString(c);
+
+            long d = getD(ev, PHI);
+            Dvalue = Convert.ToString(d);
+
+            long mdec = exp_calc(c, n, d);
+            decrypted = Convert.ToString(mdec);
+
+            tbPublic = "(" + Convert.ToString(n) + "," + Evalue + ")";
+
+            tbPrivate = "(" + Convert.ToString(n) + "," + Dvalue + ")";
+
+
+        }
+        public long getEv(long PHI)
+        {
+            long great = 0, e = 2;
+
+            while (great != 1)
+            {
+                e = e + 1;
+                great = get_common_denom(e, PHI);
+            }
+            return (e);
+        }
+        public long getRandomEv(long PHI)
+        {
+            long great = 0, e = 0;
+
+            //Random number generator cannot handle long values, this is a weaknes of this setup
+            int int_phi;
+            try
+            {
+                int_phi = (int)(PHI);
+            }
+            catch
+            {
+                int_phi = (int)(Int16.MaxValue - 1);
+            }
+
+            for (; ; )
+            {
+
+
+                e = r.Next(2, int_phi);
+
+                if (e < 2 || e > PHI)
+                    continue;
+
+                if (1 == get_common_denom(e, PHI))
+                    break;
+            }
+
+            return (e);
+        }
+
+        public long get_common_denom(long e, long PHI)
+        {
+            long great, temp, a;
+
+            if (e > PHI)
+            {
+                while (e % PHI != 0)
+                {
+                    temp = e % PHI;
+                    e = PHI;
+                    PHI = temp;
+                }
+                great = PHI;
+            }
+            else
+            {
+                while (PHI % e != 0)
+                {
+                    a = PHI % e;
+                    PHI = e;
+                    e = a;
+                }
+                great = e;
+            }
+            return (great);
+        }
+
+        long getD(long e, long PHI)
+        {
+            long[] u;
+            long[] v;
+            long q, temp1, temp2, temp3;
+
+            u = new long[] { 0, 0, 0 };
+            v = new long[] { 0, 0, 0 };
+
+            u[0] = 1; u[1] = 0; u[2] = PHI;
+            v[0] = 0; v[1] = 1; v[2] = e;
+
+            while (v[2] != 0)
+            {
+                q = (long)Math.Floor((decimal)u[2] / v[2]);
+                temp1 = u[0] - q * v[0];
+                temp2 = u[1] - q * v[1];
+                temp3 = u[2] - q * v[2];
+                u[0] = v[0];
+                u[1] = v[1];
+                u[2] = v[2];
+                v[0] = temp1;
+                v[1] = temp2;
+                v[2] = temp3;
+            }
+            if (u[1] < 0) return (u[1] + PHI);
+            else return (u[1]);
+        }
+        long exp_calc(long c, long n, long d)
+        {
+            long i, g, f;
+
+            if (d % 2 == 0) g = 1; else g = c;
+
+            for (i = 1; i <= d / 2; i++)
+            {
+                f = c * c % n;
+                g = f * g % n;
+            }
+            return (g);
+
+        }
+        public long get_prime()
+        {
+            long[] primes;
+            primes = new long[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
+ 
+            73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127,  137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239,
+ 
+            241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397 };
+
+            return (primes[r.Next(primes.Length - 1)]);
+        }
