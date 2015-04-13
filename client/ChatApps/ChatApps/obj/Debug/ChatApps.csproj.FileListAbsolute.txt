@@ -28,7 +28,6 @@ F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.pdb
 F:\GIT\Chat\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe
 F:\GIT\Chat\client\ChatApps\ChatApps\bin\Debug\ChatApps.pdb
 F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.csprojResolveAssemblyReference.cache
-F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form1.resources
 F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form2.resources
 F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
 F:\GIT\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
