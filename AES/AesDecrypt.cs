@@ -1,20 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 namespace aes
 {
 
-	//import java.math.BigInteger;
+ // Big integer di C# apa?  di java tuh math.BigInteger
 
-	/// 
-	/// <summary>
-	/// @author user
-	/// </summary>
 	public class AesDecrypt
 	{
 		internal static sbyte[] initKey = new sbyte[] {(sbyte) 0x0F, (sbyte) 0x47, (sbyte) 0x0C, unchecked((sbyte) 0xAF), (sbyte) 0x15, unchecked((sbyte) 0xD9), unchecked((sbyte) 0xB7), (sbyte) 0x7F, (sbyte) 0x71, unchecked((sbyte) 0xE8), unchecked((sbyte) 0xAD), (sbyte) 0x67, unchecked((sbyte) 0xC9), (sbyte) 0x59, unchecked((sbyte) 0xD6), unchecked((sbyte) 0x98)};
@@ -186,8 +177,8 @@ namespace aes
 
 		internal static sbyte[][] ArrayToMatrix(sbyte[] array)
 		{
-//JAVA TO C# CONVERTER NOTE: The following call to the 'RectangularArrays' helper class reproduces the rectangular array initialization that is automatic in Java:
-//ORIGINAL LINE: sbyte[][] matrix = new sbyte[4][4];
+			//dari sbyte[][] matrix = new sbyte[4][4];\ pake RectangularArrays.cs helper class reproduces the rectangular array initialization that is automatic in Java:
+			
 			sbyte[][] matrix = RectangularArrays.ReturnRectangularSbyteArray(4, 4);
 			int i;
 			int j;
@@ -222,9 +213,7 @@ namespace aes
 			sbyte[] temp = @string.GetBytes();
 			return ByteArrayToHexString(temp);
 		}
-
-//JAVA TO C# CONVERTER WARNING: Method 'throws' clauses are not available in .NET:
-//ORIGINAL LINE: static String HexStringToString(String string) throws java.io.UnsupportedEncodingException
+ // throws di C# make apa ->static String HexStringToString(String string) throws java.io.UnsupportedEncodingException
 		internal static string HexStringToString(string @string)
 		{
 			@string = @string.replaceAll("00", "");
