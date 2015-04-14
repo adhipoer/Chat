@@ -225,16 +225,16 @@ namespace ChatApps
             return state;
         }
 
-        static byte[][] ArrayToMatrix(byte[] array)
+        static byte[,] ArrayToMatrix(byte[] array)
         {
-            byte[][] matrix = new byte[4][];
+            byte[,] matrix = new byte[4, 4];
             int i;
             int j;
             for (i = 0; i < 4; i++)
             {
                 for (j = 0; j < 4; j++)
                 {
-                    matrix[j][i] = array[i * 4 + j];
+                    matrix[j, i] = array[i * 4 + j];
                 }
             }
             return matrix;
@@ -360,7 +360,7 @@ namespace ChatApps
             String plainText;
             String finalPlainText = "";
             byte[][] state;
-            //byte[] cipher;
+            byte[] cipher;
             int j;
 
             plainText = "";

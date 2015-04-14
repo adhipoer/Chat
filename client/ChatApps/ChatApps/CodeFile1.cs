@@ -340,14 +340,15 @@ namespace ChatApps
                 String cipherText;
                 String finalCipherText ="";
                 byte[][] state;
-                byte[] plain;
+                //byte[] plain;
                 int j;
                 while(temp.Length%32 != 0) {
                     temp += "00";
                 }
         
                 for(i=0; i<temp.Length; i+=32) {
-                    state = ArrayToMatrix(FromHex(temp.Substring(i, i+32)));
+                    //state = ArrayToMatrix(FromHex(temp.Substring(i, i+32)));
+                    state = ArrayToMatrix(nounce);
                     for(j=0; j<c; j++) {
                         if(j==0) {
                             state = AddRoundKey(state, keyList.ElementAt(j));
