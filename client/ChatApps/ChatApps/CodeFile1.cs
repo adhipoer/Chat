@@ -16,7 +16,8 @@ namespace AES
             (byte) 0xC9, (byte) 0x59, (byte) 0xD6, (byte) 0x98
         };
 
-        static BitArray[] keyList = new BitArray[17];
+        //static BitArray[] keyList = new BitArray[17];
+        static ArrayList keyList = new ArrayList();
 
         static byte[] nounce = {
             (byte) 0x00, (byte) 0x11, (byte) 0x22, (byte) 0x33,
@@ -64,6 +65,7 @@ namespace AES
             0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
         };
 
+<<<<<<< HEAD
         static byte[] KeyExpansion(byte[] key, int round) {
         byte[] temp = new byte[16];
         byte[] x = new byte[4];
@@ -183,6 +185,47 @@ namespace AES
         return state;
     }
         
+=======
+        static void keyExp (byte[] key, int round)
+        {
+            BitArray temp = new BitArray(16);
+            BitArray x = new BitArray(4);
+            BitArray y = new BitArray(4);
+            BitArray z = new BitArray(4);
+
+            BitArray keys = new BitArray(key);
+
+            int i;
+            int j = 0;
+            for(i=3; i<16; i+=4) {
+                x[j++] = keys[(i + 4) % 16];
+            }
+            for(i=0; i<4; i++) {
+                y[i] = (byte)sbox[x[i] & 0xFF];
+            }
+            for(i=0; i<4; i++) {
+                if(i == 0)
+                    z[i] = (Convert.ToByte(y[i]) ^ Convert.ToByte(rcon[round - 1]));
+                else
+                    z[i] = y[i];
+            }
+            j = 0;
+            for(i=0; i<13; i+=4) {
+                temp[i] = (byte) (key[i] ^ z[j++]);
+            }
+            for(i=1; i<14; i+=4) {
+                temp[i] = (byte) (temp[i-1] ^ key[i]);
+            }
+            for(i=2; i<15; i+=4) {
+                temp[i] = (byte) (temp[i-1] ^ key[i]);
+            }
+            for(i=3; i<16; i+=4) {
+                temp[i] = (byte) (temp[i-1] ^ key[i]);
+            }
+            return temp;
+        }
+
+>>>>>>> origin/master
         /*static void GenerateKey()
         {
             var bits = new BitArray(initKey);
