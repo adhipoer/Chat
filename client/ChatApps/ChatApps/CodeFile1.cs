@@ -17,7 +17,7 @@ namespace ChatApps
             (byte) 0xC9, (byte) 0x59, (byte) 0xD6, (byte) 0x98
         };
         
-        static ArrayList keyList = new ArrayList();
+        static List<byte[]> keyList = new List<byte[]>();
 
         static byte[] nounce = {
             (byte) 0x00, (byte) 0x11, (byte) 0x22, (byte) 0x33,
@@ -232,7 +232,7 @@ namespace ChatApps
             //byte[] temp = string.getBytes();
             
             byte[] temp = Encoding.ASCII.GetBytes(strings);
-            return BitArrayToHexStr(new BitArray(temp));
+            return ByteArrayToHexString(temp);
         }
     
         static String HexStringToString(String strings)
@@ -240,24 +240,34 @@ namespace ChatApps
             Regex rgx = new Regex("00");
             strings = rgx.Replace(strings, "");
          
-            byte[] temp = HexStringToByteArray(strings);
-            return new String(UTF-8, temp);
+            byte[] temp = FromHex(strings);
+            return Encoding.UTF8.GetString(temp);
         }
-    
-        static byte[] HexStringToByteArray(String hexString) {
-            int len = hexString.Length;
-            byte[] data = new byte[len / 2];
-            int i;
-            for(i=0; i<len; i+=2) {
-                data[i / 2] = (byte) ((Char.IsDigit(hexString[i], 16) << 4)
-                        + Character.digit(hexString.charAt(i + 1), 16));
+
+        public static byte[] FromHex(string hex)
+        {
+            hex = hex.Replace("-", "");
+            byte[] raw = new byte[hex.Length / 2];
+            for (int i = 0; i < raw.Length; i++)
+            {
+                raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
             }
-            return data;
+            return raw;
         }
+        //static byte[] HexStringToByteArray(String hexString) {
+        //    int len = hexString.Length;
+        //    byte[] data = new byte[len / 2];
+        //    int i;
+        //    for(i=0; i<len; i+=2) {
+        //        data[i / 2] = (byte) ((Character.IsDigit(hexString[i], 16) << 4)
+        //                + Character.digit(hexString.charAt(i + 1), 16));
+        //    }
+        //    return data;
+        //}
 
         static String ByteArrayToHexString(byte[] hexArray) 
         {
-            String hexString = new String();
+            String hexString = "";
             foreach (byte hex in hexArray) {
                 String temp = Convert.ToString(hex & 0xFF, 16);
                 if(temp.Length== 1)
@@ -322,13 +332,13 @@ namespace ChatApps
                 int i;
                 keyList.Add(key);
                 for(i=0; i<10; i++) {
-                    keyList.Add(KeyExpansion(keyList.get[i], i+2));
+                    keyList.Add(KeyExpansion(keyList.ElementAt(i), i+2));
                     
                 }
         
                 String temp = StringToHexString(cipher);
                 String cipherText;
-                String finalCipherText = new String();
+                String finalCipherText ="";
                 byte[][] state;
                 byte[] plain;
                 int j;
@@ -337,22 +347,22 @@ namespace ChatApps
                 }
         
                 for(i=0; i<temp.Length; i+=32) {
-                    state = ArrayToMatrix(HexStringToByteArray(temp.Substring(i, i+32)));
+                    state = ArrayToMatrix(FromHex(temp.Substring(i, i+32)));
                     for(j=0; j<c; j++) {
                         if(j==0) {
-                            state = AddRoundKey(state, keyList.get(j));
+                            state = AddRoundKey(state, keyList.ElementAt(j));
                         } else if(j==c-1) {
                             state = Subtitution(state);
                             state = ShiftRow(state);
-                            state = AddRoundKey(state, keyList.get(j));
+                            state = AddRoundKey(state, keyList.ElementAt(j));
                         } else {
                             state = Subtitution(state);
                             state = ShiftRow(state);
                             state = MixColumn(state);
-                            state = AddRoundKey(state, keyList.get(j));
+                            state = AddRoundKey(state, keyList.ElementAt(j));
                         }
                     }
-                    cipherText = BitArrayToHexStr(MatrixToArray(state));
+                    cipherText = ByteArrayToHexString(MatrixToArray(state));
                     finalCipherText += cipherText;
                 }
                 return finalCipherText;
