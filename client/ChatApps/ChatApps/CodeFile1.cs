@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AES
+namespace ChatApps
 {
-    static class Program
+    public static class CodeFile1
     {
         static byte[] initKey = {
             (byte) 0x0F, (byte) 0x47, (byte) 0x0C, (byte) 0xAF,
@@ -77,12 +77,10 @@ namespace AES
             for (i = 3; i < 16; i += 4)
             {
                 x[j++] = key[(i + 4) % 16];
-                //            System.out.println(Integer.toString(x[j-1] & 0xFF, 16));
             }
             for (i = 0; i < 4; i++)
             {
                 y[i] = (byte)sbox[x[i] & 0xFF];
-                //            System.out.println(Integer.toString(y[i] & 0xFF, 16));
             }
             for (i = 0; i < 4; i++)
             {
@@ -90,29 +88,24 @@ namespace AES
                     z[i] = (byte)(y[i] ^ (byte)rcon[round - 1]);
                 else
                     z[i] = y[i];
-                //            System.out.println(Integer.toString(z[i] & 0xFF, 16));
+                    //System.out.println(Integer.toString(z[i] & 0xFF, 16));
             }
             j = 0;
             for (i = 0; i < 13; i += 4)
             {
                 temp[i] = (byte)(key[i] ^ z[j++]);
-                //            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
             }
             for (i = 1; i < 14; i += 4)
             {
                 temp[i] = (byte)(temp[i - 1] ^ key[i]);
-                //            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
             }
             for (i = 2; i < 15; i += 4)
             {
                 temp[i] = (byte)(temp[i - 1] ^ key[i]);
-                //            System.out.print(Integer.toString(temp[i] & 0xFF, 16) + " ");
-                //            System.out.println(Integer.toString((byte)(key[i]) & 0xFF, 16));
             }
             for (i = 3; i < 16; i += 4)
             {
                 temp[i] = (byte)(temp[i - 1] ^ key[i]);
-                //            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
             }
             return temp;
         }
@@ -244,25 +237,22 @@ namespace AES
             return BitArrayToHexStr(new BitArray(temp));
         }
     
-        static String HexStringToString(String string) throws UnsupportedEncodingException {
-            string = string.replaceAll("00", "");
-            byte[] temp = HexStringToByteArray(string);
+        static String HexStringToString(String strings) throws UnsupportedEncodingException {
+            strings = strings.replaceAll("00", "");
+            byte[] temp = HexStringToByteArray(strings);
             return new String(temp, "UTF-8");
         }
     
         static byte[] HexStringToByteArray(String hexString) {
-            int len = hexString.length();
-    //        System.out.println(len);
+            int len = hexString.Length;
             byte[] data = new byte[len / 2];
             int i;
             for(i=0; i<len; i+=2) {
-                data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                data[i / 2] = (byte) ((Char.IsDigit(hexString[i], 16) << 4)
                         + Character.digit(hexString.charAt(i + 1), 16));
             }
             return data;
         }
-
-
 
         static String BitArrayToHexStr(BitArray ba)
         {
@@ -314,51 +304,46 @@ namespace AES
             return hex;
         }
     
-        public static String Decrypt(String plain, byte[] key, int c) {
-            int i;
-            keyList.add(key);
-            for(i=0; i<10; i++) {
-                keyList.add(KeyExpansion(keyList.get(i), i+2));
-    //            System.out.println(ByteArrayToHexString(keyList.get(i+1)));
-            }
-        
-        
-            String temp = plain;
-            String plainText;
-            String finalPlainText = new String();
-            byte[][] state;
-            byte[] cipher;
-            int j;
-    //        System.out.println(temp);
-
-            plainText = "";
-            for(i=0; i<temp.length(); i+=32) {
-    //            System.out.println(ByteArrayToHexString(nounce));
-                state = ArrayToMatrix(HexStringToByteArray(temp.substring(i, i+32)));
-                for(j=0; j<c; j++) {
-                    if(j==0) {state = AddRoundKey(state, keyList.get(c-j-1));
-                    } else if (j==c-1) {
-                        state = ShiftRow(state);
-                        state = Subtitution(state);
-                        state = AddRoundKey(state, keyList.get(c-j-1));
-    //                    System.out.println(ByteArrayToHexString(keyList.get(c-j)));
-                    } else {
-                        state = ShiftRow(state);
-                        state = Subtitution(state);
-                        state = AddRoundKey(state, keyList.get(c-j-1));
-                        state = MixColumn(state);
-                    }
+        public static String Encrypt(String cipher, byte[] key, int c) {
+                int i;
+                keyList.Add(key);
+                for(i=0; i<10; i++) {
+                    keyList.Add(KeyExpansion(keyList[i], i+2));
+                    
+        //            System.out.println(ByteArrayToHexString(keyList.get(i+1)));
                 }
-    //            nounce = MatrixToArray(state);
-    //            
-    //            cipher = HexStringToByteArray(temp.substring(i, i+32));
-    //            state = AddRoundKey(state, cipher);
-
-                plainText = (ByteArrayToHexString(MatrixToArray(state)));
-                finalPlainText += plainText;
-            }
         
-            return finalPlainText;
+                String temp = StringToHexString(cipher);
+                String cipherText;
+                String finalCipherText = new String();
+                byte[][] state;
+                byte[] plain;
+                int j;
+                while(temp.Length%32 != 0) {
+                    temp += "00";
+                }
+        
+                for(i=0; i<temp.Length; i+=32) {
+        //            System.out.println(ByteArrayToHexString(nounce));
+                    state = ArrayToMatrix(HexStringToByteArray(temp.substring(i, i+32)));
+                    for(j=0; j<c; j++) {
+                        if(j==0) {
+                            state = AddRoundKey(state, keyList.get(j));
+                        } else if(j==c-1) {
+                            state = Subtitution(state);
+                            state = ShiftRow(state);
+                            state = AddRoundKey(state, keyList.get(j));
+                        } else {
+                            state = Subtitution(state);
+                            state = ShiftRow(state);
+                            state = MixColumn(state);
+                            state = AddRoundKey(state, keyList.get(j));
+                        }
+                    }
+                    cipherText = BitArrayToHexStr(MatrixToArray(state));
+                    finalCipherText += cipherText;
+                }
+                return finalCipherText;
         }
     
         public static void Set(byte[] key, byte[] iv) {
