@@ -237,10 +237,11 @@ namespace AES
             return array;
         }
     
-        static String StringToHexString(String string) {
-            //return String.format("%x", new BigInteger(1, string.getBytes()));
-            byte[] temp = string.getBytes();
-            return ByteArrayToHexString(temp);
+        static String StringToHexString(String strings) {
+            //byte[] temp = string.getBytes();
+            
+            byte[] temp = Encoding.ASCII.GetBytes(strings);
+            return BitArrayToHexStr(new BitArray(temp));
         }
     
         static String HexStringToString(String string) throws UnsupportedEncodingException {
@@ -260,17 +261,57 @@ namespace AES
             }
             return data;
         }
-    
-        static String ByteArrayToHexString(byte[] hexArray) {
-            String hexString = new String();
-            for(byte hex:hexArray) {
-                String temp = Integer.toString(hex & 0xFF, 16);
-                if(temp.length() == 1)
-                    temp = "0" + temp;
-                hexString += temp;
-    //            System.out.println(hexString);
+
+
+
+        static String BitArrayToHexStr(BitArray ba)
+        {
+            String hex = "";
+            int len = ba.Length;
+            int i;
+            int temp;
+            for (i = 0; i < len; i += 4)
+            {
+                temp = 0;
+                if (ba[i] == true)
+                {
+                    temp += 1;
+                }
+                if (ba[i+1] == true)
+                {
+                    temp += 2;
+                }
+                if (ba[i+2] == true)
+                {
+                    temp += 4;
+                }
+                if (ba[i+3] == true)
+                {
+                    temp += 8;
+                }
+
+                if (temp < 10)
+                {
+                    hex += temp.ToString();
+                }
+                else
+                {
+                    if (temp == 10)
+                        hex += "A";
+                    else if (temp == 11)
+                        hex += "B";
+                    else if (temp == 12)
+                        hex += "C";
+                    else if (temp == 13)
+                        hex += "D";
+                    else if (temp == 14)
+                        hex += "E";
+                    else
+                        hex += "F";
+                }
             }
-            return hexString;
+
+            return hex;
         }
     
         public static String Decrypt(String plain, byte[] key, int c) {
