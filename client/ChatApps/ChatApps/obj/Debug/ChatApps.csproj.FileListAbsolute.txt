@@ -55,6 +55,3 @@ D:\ChatApps\ChatApps\obj\Debug\ChatApps.Form3.resources
 D:\ChatApps\ChatApps\obj\Debug\ChatApps.Form4.resources
 D:\ChatApps\ChatApps\obj\Debug\ChatApps.Properties.Resources.resources
 D:\ChatApps\ChatApps\obj\Debug\ChatApps.csproj.GenerateResource.Cache
-C:\Users\izdiharfarahdina\Desktop\FARAH\Semestster 6\KIJ\Chat\client\ChatApps\ChatApps\bin\Debug\ChatApps.exe.config
-C:\Users\izdiharfarahdina\Desktop\FARAH\Semestster 6\KIJ\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.exe
-C:\Users\izdiharfarahdina\Desktop\FARAH\Semestster 6\KIJ\Chat\client\ChatApps\ChatApps\obj\Debug\ChatApps.pdb
