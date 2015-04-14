@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ChatApps
@@ -199,16 +200,16 @@ namespace ChatApps
             return state;
         }
         
-        static byte[,] ArrayToMatrix(byte[] array) 
+        static byte[][] ArrayToMatrix(byte[] array) 
         {
-            byte[,] matrix = new byte[4,4];
+            byte[][] matrix = new byte[4][];
             int i;
             int j;
             for(i=0; i<4; i++) 
             {
                 for(j=0; j<4; j++)
                 {
-                    matrix[j,i] = array[i * 4 + j];
+                    matrix[j][i] = array[i * 4 + j];
                 }
             }
         return matrix;
@@ -234,10 +235,13 @@ namespace ChatApps
             return BitArrayToHexStr(new BitArray(temp));
         }
     
-        static String HexStringToString(String strings) throws UnsupportedEncodingException {
-            strings = strings.replaceAll("00", "");
+        static String HexStringToString(String strings)
+        {
+            Regex rgx = new Regex("00");
+            strings = rgx.Replace(strings, "");
+         
             byte[] temp = HexStringToByteArray(strings);
-            return new String(temp, "UTF-8");
+            return new String(UTF-8, temp);
         }
     
         static byte[] HexStringToByteArray(String hexString) {
@@ -251,62 +255,74 @@ namespace ChatApps
             return data;
         }
 
-        static String BitArrayToHexStr(BitArray ba)
+        static String ByteArrayToHexString(byte[] hexArray) 
         {
-            String hex = "";
-            int len = ba.Length;
-            int i;
-            int temp;
-            for (i = 0; i < len; i += 4)
-            {
-                temp = 0;
-                if (ba[i] == true)
-                {
-                    temp += 1;
-                }
-                if (ba[i+1] == true)
-                {
-                    temp += 2;
-                }
-                if (ba[i+2] == true)
-                {
-                    temp += 4;
-                }
-                if (ba[i+3] == true)
-                {
-                    temp += 8;
-                }
-
-                if (temp < 10)
-                {
-                    hex += temp.ToString();
-                }
-                else
-                {
-                    if (temp == 10)
-                        hex += "A";
-                    else if (temp == 11)
-                        hex += "B";
-                    else if (temp == 12)
-                        hex += "C";
-                    else if (temp == 13)
-                        hex += "D";
-                    else if (temp == 14)
-                        hex += "E";
-                    else
-                        hex += "F";
-                }
+            String hexString = new String();
+            foreach (byte hex in hexArray) {
+                String temp = Convert.ToString(hex & 0xFF, 16);
+                if(temp.Length== 1)
+                    temp = "0" + temp;
+                hexString += temp;
             }
-
-            return hex;
+            return hexString;
         }
+        //static String BitArrayToHexStr(BitArray ba)
+        //{
+
+        //    String hex = "";
+        //    int len = ba.Length;
+        //    int i;
+        //    int temp;
+        //    for (i = 0; i < len; i += 4)
+        //    {
+        //        temp = 0;
+        //        if (ba[i] == true)
+        //        {
+        //            temp += 1;
+        //        }
+        //        if (ba[i+1] == true)
+        //        {
+        //            temp += 2;
+        //        }
+        //        if (ba[i+2] == true)
+        //        {
+        //            temp += 4;
+        //        }
+        //        if (ba[i+3] == true)
+        //        {
+        //            temp += 8;
+        //        }
+
+        //        if (temp < 10)
+        //        {
+        //            hex += temp.ToString();
+        //        }
+        //        else
+        //        {
+        //            if (temp == 10)
+        //                hex += "A";
+        //            else if (temp == 11)
+        //                hex += "B";
+        //            else if (temp == 12)
+        //                hex += "C";
+        //            else if (temp == 13)
+        //                hex += "D";
+        //            else if (temp == 14)
+        //                hex += "E";
+        //            else
+        //                hex += "F";
+        //        }
+        //    }
+
+        //    return hex;
+        //}
     
         public static String Encrypt(String cipher, byte[] key, int c) 
         {
                 int i;
                 keyList.Add(key);
                 for(i=0; i<10; i++) {
-                    keyList.Add(KeyExpansion(keyList[i], i+2));
+                    keyList.Add(KeyExpansion(keyList.get[i], i+2));
                     
                 }
         
@@ -321,7 +337,7 @@ namespace ChatApps
                 }
         
                 for(i=0; i<temp.Length; i+=32) {
-                    state = ArrayToMatrix(HexStringToByteArray(temp.substring(i, i+32)));
+                    state = ArrayToMatrix(HexStringToByteArray(temp.Substring(i, i+32)));
                     for(j=0; j<c; j++) {
                         if(j==0) {
                             state = AddRoundKey(state, keyList.get(j));
