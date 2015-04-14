@@ -26,7 +26,7 @@ namespace AES
         };
 
         //sbox
-        static int[] sbox = {
+        static byte[] sbox = {
             0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
             0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
             0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
@@ -45,7 +45,7 @@ namespace AES
             0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16                
         };
 
-        static int[] rcon = {
+        static byte[] rcon = {
             0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 
             0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 
             0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 
@@ -64,6 +64,125 @@ namespace AES
             0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
         };
 
+        static byte[] KeyExpansion(byte[] key, int round) {
+        byte[] temp = new byte[16];
+        byte[] x = new byte[4];
+        byte[] y = new byte[4];
+        byte[] z = new byte[4];
+        
+        int i;
+        int j = 0;
+        for(i=3; i<16; i+=4) {
+            x[j++] = key[(i + 4) % 16];
+//            System.out.println(Integer.toString(x[j-1] & 0xFF, 16));
+        }
+        for(i=0; i<4; i++) {
+            y[i] = (byte) sbox[x[i] & 0xFF];
+//            System.out.println(Integer.toString(y[i] & 0xFF, 16));
+        }
+        for(i=0; i<4; i++) {
+            if(i == 0)
+                z[i] = (byte) (y[i] ^ (byte) rcon[round-1]);
+            else
+                z[i] = y[i];
+//            System.out.println(Integer.toString(z[i] & 0xFF, 16));
+        }
+        j = 0;
+        for(i=0; i<13; i+=4) {
+            temp[i] = (byte) (key[i] ^ z[j++]);
+//            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
+        }
+        for(i=1; i<14; i+=4) {
+            temp[i] = (byte) (temp[i-1] ^ key[i]);
+//            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
+        }
+        for(i=2; i<15; i+=4) {
+            temp[i] = (byte) (temp[i-1] ^ key[i]);
+//            System.out.print(Integer.toString(temp[i] & 0xFF, 16) + " ");
+//            System.out.println(Integer.toString((byte)(key[i]) & 0xFF, 16));
+        }
+        for(i=3; i<16; i+=4) {
+            temp[i] = (byte) (temp[i-1] ^ key[i]);
+//            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
+        }
+        return temp;
+    }
+    
+    static byte[][] AddRoundKey(byte[][] state, byte[] expKey) {
+        int i;
+        int j;
+        for(i=0; i<4; i++) {
+            for(j=0; j<4; j++) {
+                state[j][i] ^= expKey[i * 4 + j];
+            }
+        }
+        return state;
+    }
+    
+    static byte[][] Subtitution(byte[][] state) {
+        int i;
+        int j;
+        for(i=0; i<4; i++) {
+            for(j=0; j<4; j++) {
+                state[i][j] = (byte) sbox[state[i][j] & 0xFF];
+            }
+        }
+        return state;
+    }
+    
+    static byte[][] ShiftRow(byte[][] state) {
+        byte[] temp = new byte[4];
+        int i;
+        int j;
+        for(i=1; i<4; i++) {
+            for(j=0; j<4; j++) {
+                temp[(j + i) % 4] = state[i][j];
+            }
+            for(j=0; j<4; j++) {
+                state[i][j] = temp[j];
+            }
+        }
+        return state;
+    }
+    
+    static byte GFMultiplication(byte a, byte b) {
+        byte result = 0;
+        byte temp;
+        while(a != 0) {
+            if((a & 1) != 0) {
+                result = (byte) (result ^ b);
+            }
+            temp = (byte) (b & 0x80);
+            b = (byte) (b << 1);
+            if(temp != 0) {
+                b = (byte) (b ^ 0x1B);
+            }
+            a = (byte) ((a & 0xFF) >> 1);
+        }
+        return result;
+    }
+    
+    static byte[][] MixColumn(byte[][] state) {
+        int[] temp = new int[4];
+        byte a = (byte) (0x0B);
+        byte b = (byte) (0x0D);
+        byte c = (byte) (0x09);
+        byte d = (byte) (0x0E);
+        
+        int i;
+        int j;
+        for(i=0; i<4; i++) {
+            temp[0] = GFMultiplication(d, state[0][i]) ^ GFMultiplication(a, state[1][i]) ^ GFMultiplication(b, state[2][i]) ^ GFMultiplication(c, state[3][i]);
+            temp[1] = GFMultiplication(c, state[0][i]) ^ GFMultiplication(d, state[1][i]) ^ GFMultiplication(a, state[2][i]) ^ GFMultiplication(b, state[3][i]);
+            temp[2] = GFMultiplication(b, state[0][i]) ^ GFMultiplication(c, state[1][i]) ^ GFMultiplication(d, state[2][i]) ^ GFMultiplication(a, state[3][i]);
+            temp[3] = GFMultiplication(a, state[0][i]) ^ GFMultiplication(b, state[1][i]) ^ GFMultiplication(c, state[2][i]) ^ GFMultiplication(d, state[3][i]);
+            for(j=0; j<4; j++) {
+                state[j][i] = (byte) (temp[j]);
+            }
+        }
+        return state;
+    }
+        
         /*static void GenerateKey()
         {
             var bits = new BitArray(initKey);
