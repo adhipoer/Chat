@@ -65,438 +65,264 @@ namespace AES
             0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d
         };
 
-<<<<<<< HEAD
-        static byte[] KeyExpansion(byte[] key, int round) {
-        byte[] temp = new byte[16];
-        byte[] x = new byte[4];
-        byte[] y = new byte[4];
-        byte[] z = new byte[4];
-        
-        int i;
-        int j = 0;
-        for(i=3; i<16; i+=4) {
-            x[j++] = key[(i + 4) % 16];
-//            System.out.println(Integer.toString(x[j-1] & 0xFF, 16));
-        }
-        for(i=0; i<4; i++) {
-            y[i] = (byte) sbox[x[i] & 0xFF];
-//            System.out.println(Integer.toString(y[i] & 0xFF, 16));
-        }
-        for(i=0; i<4; i++) {
-            if(i == 0)
-                z[i] = (byte) (y[i] ^ (byte) rcon[round-1]);
-            else
-                z[i] = y[i];
-//            System.out.println(Integer.toString(z[i] & 0xFF, 16));
-        }
-        j = 0;
-        for(i=0; i<13; i+=4) {
-            temp[i] = (byte) (key[i] ^ z[j++]);
-//            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
-        }
-        for(i=1; i<14; i+=4) {
-            temp[i] = (byte) (temp[i-1] ^ key[i]);
-//            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
-        }
-        for(i=2; i<15; i+=4) {
-            temp[i] = (byte) (temp[i-1] ^ key[i]);
-//            System.out.print(Integer.toString(temp[i] & 0xFF, 16) + " ");
-//            System.out.println(Integer.toString((byte)(key[i]) & 0xFF, 16));
-        }
-        for(i=3; i<16; i+=4) {
-            temp[i] = (byte) (temp[i-1] ^ key[i]);
-//            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
-        }
-        return temp;
-    }
-    
-    static byte[][] AddRoundKey(byte[][] state, byte[] expKey) {
-        int i;
-        int j;
-        for(i=0; i<4; i++) {
-            for(j=0; j<4; j++) {
-                state[j][i] ^= expKey[i * 4 + j];
-            }
-        }
-        return state;
-    }
-    
-    static byte[][] Subtitution(byte[][] state) {
-        int i;
-        int j;
-        for(i=0; i<4; i++) {
-            for(j=0; j<4; j++) {
-                state[i][j] = (byte) sbox[state[i][j] & 0xFF];
-            }
-        }
-        return state;
-    }
-    
-    static byte[][] ShiftRow(byte[][] state) {
-        byte[] temp = new byte[4];
-        int i;
-        int j;
-        for(i=1; i<4; i++) {
-            for(j=0; j<4; j++) {
-                temp[(j + i) % 4] = state[i][j];
-            }
-            for(j=0; j<4; j++) {
-                state[i][j] = temp[j];
-            }
-        }
-        return state;
-    }
-    
-    static byte GFMultiplication(byte a, byte b) {
-        byte result = 0;
-        byte temp;
-        while(a != 0) {
-            if((a & 1) != 0) {
-                result = (byte) (result ^ b);
-            }
-            temp = (byte) (b & 0x80);
-            b = (byte) (b << 1);
-            if(temp != 0) {
-                b = (byte) (b ^ 0x1B);
-            }
-            a = (byte) ((a & 0xFF) >> 1);
-        }
-        return result;
-    }
-    
-    static byte[][] MixColumn(byte[][] state) {
-        int[] temp = new int[4];
-        byte a = (byte) (0x0B);
-        byte b = (byte) (0x0D);
-        byte c = (byte) (0x09);
-        byte d = (byte) (0x0E);
-        
-        int i;
-        int j;
-        for(i=0; i<4; i++) {
-            temp[0] = GFMultiplication(d, state[0][i]) ^ GFMultiplication(a, state[1][i]) ^ GFMultiplication(b, state[2][i]) ^ GFMultiplication(c, state[3][i]);
-            temp[1] = GFMultiplication(c, state[0][i]) ^ GFMultiplication(d, state[1][i]) ^ GFMultiplication(a, state[2][i]) ^ GFMultiplication(b, state[3][i]);
-            temp[2] = GFMultiplication(b, state[0][i]) ^ GFMultiplication(c, state[1][i]) ^ GFMultiplication(d, state[2][i]) ^ GFMultiplication(a, state[3][i]);
-            temp[3] = GFMultiplication(a, state[0][i]) ^ GFMultiplication(b, state[1][i]) ^ GFMultiplication(c, state[2][i]) ^ GFMultiplication(d, state[3][i]);
-            for(j=0; j<4; j++) {
-                state[j][i] = (byte) (temp[j]);
-            }
-        }
-        return state;
-    }
-        
-=======
-        static void keyExp (byte[] key, int round)
+        static byte[] KeyExpansion(byte[] key, int round)
         {
-            BitArray temp = new BitArray(16);
-            BitArray x = new BitArray(4);
-            BitArray y = new BitArray(4);
-            BitArray z = new BitArray(4);
-
-            BitArray keys = new BitArray(key);
+            byte[] temp = new byte[16];
+            byte[] x = new byte[4];
+            byte[] y = new byte[4];
+            byte[] z = new byte[4];
 
             int i;
             int j = 0;
-            for(i=3; i<16; i+=4) {
-                x[j++] = keys[(i + 4) % 16];
+            for (i = 3; i < 16; i += 4)
+            {
+                x[j++] = key[(i + 4) % 16];
+                //            System.out.println(Integer.toString(x[j-1] & 0xFF, 16));
             }
-            for(i=0; i<4; i++) {
+            for (i = 0; i < 4; i++)
+            {
                 y[i] = (byte)sbox[x[i] & 0xFF];
+                //            System.out.println(Integer.toString(y[i] & 0xFF, 16));
             }
-            for(i=0; i<4; i++) {
-                if(i == 0)
-                    z[i] = (Convert.ToByte(y[i]) ^ Convert.ToByte(rcon[round - 1]));
+            for (i = 0; i < 4; i++)
+            {
+                if (i == 0)
+                    z[i] = (byte)(y[i] ^ (byte)rcon[round - 1]);
                 else
                     z[i] = y[i];
+                //            System.out.println(Integer.toString(z[i] & 0xFF, 16));
             }
             j = 0;
-            for(i=0; i<13; i+=4) {
-                temp[i] = (byte) (key[i] ^ z[j++]);
+            for (i = 0; i < 13; i += 4)
+            {
+                temp[i] = (byte)(key[i] ^ z[j++]);
+                //            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
             }
-            for(i=1; i<14; i+=4) {
-                temp[i] = (byte) (temp[i-1] ^ key[i]);
+            for (i = 1; i < 14; i += 4)
+            {
+                temp[i] = (byte)(temp[i - 1] ^ key[i]);
+                //            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
             }
-            for(i=2; i<15; i+=4) {
-                temp[i] = (byte) (temp[i-1] ^ key[i]);
+            for (i = 2; i < 15; i += 4)
+            {
+                temp[i] = (byte)(temp[i - 1] ^ key[i]);
+                //            System.out.print(Integer.toString(temp[i] & 0xFF, 16) + " ");
+                //            System.out.println(Integer.toString((byte)(key[i]) & 0xFF, 16));
             }
-            for(i=3; i<16; i+=4) {
-                temp[i] = (byte) (temp[i-1] ^ key[i]);
+            for (i = 3; i < 16; i += 4)
+            {
+                temp[i] = (byte)(temp[i - 1] ^ key[i]);
+                //            System.out.println(Integer.toString(temp[i] & 0xFF, 16));
             }
             return temp;
         }
 
->>>>>>> origin/master
-        /*static void GenerateKey()
+        static byte[][] AddRoundKey(byte[][] state, byte[] expKey)
         {
-            var bits = new BitArray(initKey);
-            BitArray bits2 = new BitArray(56);
-            BitArray c = new BitArray(28);
-            BitArray d = new BitArray(28);
+            int i;
+            int j;
+            for (i = 0; i < 4; i++)
+            {
+                for (j = 0; j < 4; j++)
+                {
+                    state[j][i] ^= expKey[i * 4 + j];
+                }
+            }
+            return state;
+        }
 
-            BitArray tempC = new BitArray(28);
-            BitArray tempD = new BitArray(28);
+        static byte[][] Subtitution(byte[][] state)
+        {
+            int i;
+            int j;
+            for (i = 0; i < 4; i++)
+            {
+                for (j = 0; j < 4; j++)
+                {
+                    state[i][j] = (byte)sbox[state[i][j] & 0xFF];
+                }
+            }
+            return state;
+        }
+
+        static byte[][] ShiftRow(byte[][] state)
+        {
+            byte[] temp = new byte[4];
+            int i;
+            int j;
+            for (i = 1; i < 4; i++)
+            {
+                for (j = 0; j < 4; j++)
+                {
+                    temp[(j + i) % 4] = state[i][j];
+                }
+                for (j = 0; j < 4; j++)
+                {
+                    state[i][j] = temp[j];
+                }
+            }
+            return state;
+        }
+
+        static byte GFMultiplication(byte a, byte b)
+        {
+            byte result = 0;
+            byte temp;
+            while (a != 0)
+            {
+                if ((a & 1) != 0)
+                {
+                    result = (byte)(result ^ b);
+                }
+                temp = (byte)(b & 0x80);
+                b = (byte)(b << 1);
+                if (temp != 0)
+                {
+                    b = (byte)(b ^ 0x1B);
+                }
+                a = (byte)((a & 0xFF) >> 1);
+            }
+            return result;
+        }
+
+        static byte[][] MixColumn(byte[][] state)
+        {
+            int[] temp = new int[4];
+            byte a = (byte)(0x0B);
+            byte b = (byte)(0x0D);
+            byte c = (byte)(0x09);
+            byte d = (byte)(0x0E);
 
             int i;
-            for (i = 0; i < 56; i++)
+            int j;
+            for (i = 0; i < 4; i++)
             {
-                bits2[i] = bits[pc1[i] - 1];
-            }
-
-            //CC[0] = new BitArray(28);
-            //DD[0] = new BitArray(28);
-
-            for (i = 0; i < 28; i++)
-            {
-                c[i] = bits2[i];
-                d[i] = bits2[i + 28];
-                //CC[0][i] = bits2[i];
-                //DD[0][i] = bits2[i + 28];
-            }
-            tempC = c;
-            tempD = d;
-
-            //Console.Write(BitArrayToHexStr(c));
-            //Console.Write(" ");
-            //Console.WriteLine(BitArrayToHexStr(d));
-
-            for (i = 0; i < 16; i++)
-            {
-                //CC[i + 1] = new BitArray(28);
-                //DD[i + 1] = new BitArray(28);
-
-                int j;
-                for (j = 0; j < 28; j++)
+                temp[0] = GFMultiplication(d, state[0][i]) ^ GFMultiplication(a, state[1][i]) ^ GFMultiplication(b, state[2][i]) ^ GFMultiplication(c, state[3][i]);
+                temp[1] = GFMultiplication(c, state[0][i]) ^ GFMultiplication(d, state[1][i]) ^ GFMultiplication(a, state[2][i]) ^ GFMultiplication(b, state[3][i]);
+                temp[2] = GFMultiplication(b, state[0][i]) ^ GFMultiplication(c, state[1][i]) ^ GFMultiplication(d, state[2][i]) ^ GFMultiplication(a, state[3][i]);
+                temp[3] = GFMultiplication(a, state[0][i]) ^ GFMultiplication(b, state[1][i]) ^ GFMultiplication(c, state[2][i]) ^ GFMultiplication(d, state[3][i]);
+                for (j = 0; j < 4; j++)
                 {
-                    c[j] = tempC[(j + iter[i]) % 28];
-                    d[j] = tempD[(j + iter[i]) % 28];
-                    //CC[i + 1][j] = tempC[(j + iter[i]) % 28];
-                    //DD[i + 1][j] = tempD[(j + iter[i]) % 28];
+                    state[j][i] = (byte)(temp[j]);
                 }
-                tempC = c;
-                tempD = d;
-
-                KK[i + 1] = new BitArray(48);
-
-                for (j = 0; j < 48; j++)
-                {
-                    if (pc2[j] < 29)
-                    {
-                        KK[i + 1][j] = c[pc2[j] - 1];
-                    }
-                    else
-                    {
-                        KK[i + 1][j] = d[pc2[j] - 29];
-                    }
-                }
-
-                //Console.Write(BitArrayToHexStr(c));
-                //Console.Write(" ");
-                //Console.WriteLine(BitArrayToHexStr(d));
             }
-
+            return state;
         }
-
-        static void Process64bit(byte[] data)
+        
+        static byte[,] ArrayToMatrix(byte[] array) 
         {
-            BitArray temp = new BitArray(data);
-            BitArray datas = new BitArray(data);
+            byte[,] matrix = new byte[4,4];
             int i;
-            for (i = 0; i < 64; i++)
+            int j;
+            for(i=0; i<4; i++) 
             {
-                datas[i] = temp[ip[i] - 1];
-            }
-            Console.WriteLine(BitArrayToHexStr(datas));
-
-            BitArray[] L = new BitArray[17];
-            BitArray[] R = new BitArray[17];
-
-            L[0] = new BitArray(32);
-            R[0] = new BitArray(32);
-
-            for (i = 0; i < 32; i++)
-            {
-                L[0][i] = datas[i];
-                R[0][i] = datas[i + 32];
-            }
-
-            for (i = 0; i < 1; i++)
-            {
-                int j;
-                BitArray E = new BitArray(48);
-                for (j = 0; j < 48; j++)
+                for(j=0; j<4; j++)
                 {
-                    E[j] = R[i][exp[j] - 1];
-                }
-                Console.WriteLine(BitArrayToHexStr(E));
-
-                for (j = 0; j < 48; j++)
-                {
-                    E[j] ^= KK[i + 1][j];
-                }
-                Console.WriteLine(BitArrayToHexStr(E));
-
-                BitArray[] B = new BitArray[8];
-                for (j = 0; j < 8; j++)
-                {
-                    B[j] = new BitArray(6);
-                }
-
-                for (j = 0; j < 8; j++)
-                {
-                    int k;
-                    for (k = 0; k < 6; k++)
-                    {
-                        B[j][k] = E[k + j * 6];
-                    }
-
-                }
-
-                BitArray[] BB = new BitArray[8];
-                for (j = 0; j < 8; j++)
-                {
-                    BB[j] = new BitArray(4);
-                }
-
-                for (j = 0; j < 8; j++)
-                {
-                    int x = 0;
-                    int y = 0;
-                    if (B[j][0] == true)
-                        x += 2;
-                    if (B[j][5] == true)
-                        x += 1;
-                    int k;
-                    for (k = 1; k < 5; k++)
-                    {
-                        if (B[j][k] == true)
-                            y += (int)Math.Pow(2, 4 - k);
-                    }
-                    byte[] tempt = BitConverter.GetBytes(sbox[j][y + x * 16]);
-                    BitArray temptt = new BitArray(tempt);
-                    BitArray temptb = new BitArray(4);
-                    for (k = 0; k < 4; k++)
-                    {
-                        temptb[k] = temptt[k];
-                    }
-                    BB[j] = new BitArray(temptb);
-
-                    Console.Write(j + " ");
-                    //Console.Write(sbox[j][y + x * 16] + " ");
-                    //Console.Write(BB[j].Length);
-                    Console.WriteLine(BitArrayToHexStr(BB[j]));
+                    matrix[j,i] = array[i * 4 + j];
                 }
             }
+        return matrix;
         }
-
-        static byte[] ToByteArray(this BitArray bits)
+    
+        static byte[] MatrixToArray(byte[][] matrix) 
         {
-            int numBytes = bits.Count / 8;
-            if (bits.Count % 8 != 0) numBytes++;
-
-            byte[] bytes = new byte[numBytes];
-            int byteIndex = 0, bitIndex = 0;
-
-            for (int i = 0; i < bits.Count; i++)
-            {
-                if (bits[i])
-                    bytes[byteIndex] |= (byte)(1 << (7 - bitIndex));
-
-                bitIndex++;
-                if (bitIndex == 8)
-                {
-                    bitIndex = 0;
-                    byteIndex++;
-                }
-            }
-
-            return bytes;
-        }
-
-        static String BitArrayToStr(BitArray ba)
-        {
-            byte[] strArr = new byte[ba.Length / 8];
-
-            System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
-
-            for (int i = 0; i < ba.Length / 8; i++)
-            {
-                for (int index = i * 8, m = 1; index < i * 8 + 8; index++, m *= 2)
-                {
-                    strArr[i] += ba.Get(index) ? (byte)m : (byte)0;
-                }
-            }
-
-            return encoding.GetString(strArr);
-        }
-
-        static String BitArrayToHexStr(BitArray ba)
-        {
-            String hex = "";
-            int len = ba.Length;
+            byte[] array = new byte[16];
             int i;
-            int temp;
-            for (i = 0; i < len; i += 4)
-            {
-                temp = 0;
-                if (ba[i] == true)
-                {
-                    temp += 1;
-                }
-                if (ba[i + 1] == true)
-                {
-                    temp += 2;
-                }
-                if (ba[i + 2] == true)
-                {
-                    temp += 4;
-                }
-                if (ba[i + 3] == true)
-                {
-                    temp += 8;
-                }
-
-                if (temp < 10)
-                {
-                    hex += temp.ToString();
-                }
-                else
-                {
-                    if (temp == 10)
-                        hex += "A";
-                    else if (temp == 11)
-                        hex += "B";
-                    else if (temp == 12)
-                        hex += "C";
-                    else if (temp == 13)
-                        hex += "D";
-                    else if (temp == 14)
-                        hex += "E";
-                    else
-                        hex += "F";
+            int j;
+            for(i=0; i<4; i++) {
+                for(j=0; j<4; j++) {
+                    array[i * 4 + j] = matrix[j][i];
                 }
             }
-
-            return hex;
+            return array;
         }
-
-        /*static void Main(string[] args)
-        {
-            Console.WriteLine(BitArrayToHexStr(new BitArray(initKey)));
-            GenerateKey();
+    
+        static String StringToHexString(String string) {
+            //return String.format("%x", new BigInteger(1, string.getBytes()));
+            byte[] temp = string.getBytes();
+            return ByteArrayToHexString(temp);
+        }
+    
+        static String HexStringToString(String string) throws UnsupportedEncodingException {
+            string = string.replaceAll("00", "");
+            byte[] temp = HexStringToByteArray(string);
+            return new String(temp, "UTF-8");
+        }
+    
+        static byte[] HexStringToByteArray(String hexString) {
+            int len = hexString.length();
+    //        System.out.println(len);
+            byte[] data = new byte[len / 2];
             int i;
-            for (i = 1; i < 17; i++)
-            {
-                Console.WriteLine(BitArrayToHexStr(KK[i]));
+            for(i=0; i<len; i+=2) {
+                data[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                        + Character.digit(hexString.charAt(i + 1), 16));
             }
-            Process64bit(moc);
-            //string s = "Hello World";
-            //byte[] bytes = Encoding.ASCII.GetBytes(s);
-            //BitArray b = new BitArray(bytes);
-            //string s2 = BitArrayToStr(b);
-            //Console.WriteLine(s2);
+            return data;
+        }
+    
+        static String ByteArrayToHexString(byte[] hexArray) {
+            String hexString = new String();
+            for(byte hex:hexArray) {
+                String temp = Integer.toString(hex & 0xFF, 16);
+                if(temp.length() == 1)
+                    temp = "0" + temp;
+                hexString += temp;
+    //            System.out.println(hexString);
+            }
+            return hexString;
+        }
+    
+        public static String Decrypt(String plain, byte[] key, int c) {
+            int i;
+            keyList.add(key);
+            for(i=0; i<10; i++) {
+                keyList.add(KeyExpansion(keyList.get(i), i+2));
+    //            System.out.println(ByteArrayToHexString(keyList.get(i+1)));
+            }
+        
+        
+            String temp = plain;
+            String plainText;
+            String finalPlainText = new String();
+            byte[][] state;
+            byte[] cipher;
+            int j;
+    //        System.out.println(temp);
 
-            //Console.WriteLine(Math.Pow(3, 2));
-            Console.ReadKey();
-        }*/
-    }
+            plainText = "";
+            for(i=0; i<temp.length(); i+=32) {
+    //            System.out.println(ByteArrayToHexString(nounce));
+                state = ArrayToMatrix(HexStringToByteArray(temp.substring(i, i+32)));
+                for(j=0; j<c; j++) {
+                    if(j==0) {state = AddRoundKey(state, keyList.get(c-j-1));
+                    } else if (j==c-1) {
+                        state = ShiftRow(state);
+                        state = Subtitution(state);
+                        state = AddRoundKey(state, keyList.get(c-j-1));
+    //                    System.out.println(ByteArrayToHexString(keyList.get(c-j)));
+                    } else {
+                        state = ShiftRow(state);
+                        state = Subtitution(state);
+                        state = AddRoundKey(state, keyList.get(c-j-1));
+                        state = MixColumn(state);
+                    }
+                }
+    //            nounce = MatrixToArray(state);
+    //            
+    //            cipher = HexStringToByteArray(temp.substring(i, i+32));
+    //            state = AddRoundKey(state, cipher);
+
+                plainText = (ByteArrayToHexString(MatrixToArray(state)));
+                finalPlainText += plainText;
+            }
+        
+            return finalPlainText;
+        }
+    
+        public static void Set(byte[] key, byte[] iv) {
+            initKey = key;
+            nounce = iv;
+        }
+    } 
 }
