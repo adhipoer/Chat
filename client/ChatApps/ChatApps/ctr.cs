@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatApps
 {
-    static class ctr
+    public static class ctr
     {
         static byte[] dafuq = {
             (byte) 0x0f, (byte) 0x47, (byte) 0x0c, (byte) 0xaf,
@@ -35,6 +35,17 @@ namespace ChatApps
             return x;
         }
 
+        static byte[] FromHex(string hex)
+        {
+            hex = hex.Replace("-", "");
+            byte[] raw = new byte[hex.Length / 2];
+            for (int i = 0; i < raw.Length; i++)
+            {
+                raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+            }
+            return raw;
+        }
+
         static String ByteArrayToHexString(byte[] hexArray)
         {
             String hexString = "";
@@ -47,8 +58,8 @@ namespace ChatApps
             }
             return hexString;
         }
-
-        public static void cobaCoba()
+        
+        public static void cobaCoba(byte[] dafuc)
         {
             String baru = ByteArrayToHexString(dafuq);
             char[] baru2 = baru.ToCharArray();
@@ -61,15 +72,15 @@ namespace ChatApps
                 do
                 {
                     x = Counter(baru2[y], out baru4[y]);
-                    Console.WriteLine("x:{0} y:{1}", baru2[y], baru4[y]);
+                    Console.WriteLine("x:ar{0} y:{1}", baru2[y], baru4[y]);
                     y--;
                 } while (x == 1 && y != -1);
-
-                String baru3 = new String(baru2);
-                String baru5 = new String(baru4);
-                Console.WriteLine(baru3);
-                Console.WriteLine(baru5);
-                Console.WriteLine(len);
+                System.Buffer.BlockCopy(baru2, 0, baru2, 0, baru2.Length);
+                string s2 = new string(baru2);
+                cobaCoba(FromHex(s2));
+                //Console.WriteLine(baru3);
+                //Console.WriteLine(baru5);
+                //Console.WriteLine(len);
             }
             //y = len - 1;
             //do

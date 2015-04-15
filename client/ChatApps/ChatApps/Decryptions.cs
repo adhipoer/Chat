@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ChatApps
 {
-    class Decryptions
+    public class Decryptions
     {
-        static byte[] initKey = 
+        public static byte[] initKey = 
         {
             (byte) 0x0F, (byte) 0x47, (byte) 0x0C, (byte) 0xAF,
             (byte) 0x15, (byte) 0xD9, (byte) 0xB7, (byte) 0x7F,
@@ -225,16 +225,16 @@ namespace ChatApps
             return state;
         }
 
-        static byte[,] ArrayToMatrix(byte[] array)
+        static byte[][] ArrayToMatrix(byte[] array)
         {
-            byte[,] matrix = new byte[4, 4];
+            byte[][] matrix = new byte[4][];
             int i;
             int j;
             for (i = 0; i < 4; i++)
             {
                 for (j = 0; j < 4; j++)
                 {
-                    matrix[j, i] = array[i * 4 + j];
+                    matrix[j][i] = array[i * 4 + j];
                 }
             }
             return matrix;
@@ -263,7 +263,7 @@ namespace ChatApps
             return ByteArrayToHexString(temp);
         }
 
-        static String HexStringToString(String strings)
+        public static String HexStringToString(String strings)
         {
             Regex rgx = new Regex("00");
             strings = rgx.Replace(strings, "");
