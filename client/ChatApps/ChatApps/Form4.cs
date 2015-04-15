@@ -89,7 +89,13 @@ namespace ChatApps
                 responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
                 serverStream.Read(inStream, 0, inStream.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
-                readData = " " + responseData;
+                //readData = " " + responseData;
+
+                String decs = Decryptions.Decrypt(responseData, Decryptions.initKey, 16);
+                String packets = Decryptions.HexStringToString(decs);
+
+                readData = " " + packets;
+
                 msg();
             }
         }
@@ -97,10 +103,8 @@ namespace ChatApps
         {
             if (this.InvokeRequired)
                 this.Invoke(new MethodInvoker(msg));
-            else
+            else              
                 textBox2.Text = textBox2.Text + Environment.NewLine + " >> " + readData;
         }
-
-
     }
 }
