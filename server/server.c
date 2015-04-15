@@ -65,7 +65,7 @@ int main(int argc, char **argv)
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
 	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr= inet_addr("127.0.0.1");
+	serv_addr.sin_addr.s_addr= inet_addr("10.151.36.206");
 	serv_addr.sin_port = htons(portNum);
 
 	if(bind(servFd,(struct sockaddr *)&serv_addr, sizeof(serv_addr))<0)
@@ -161,7 +161,7 @@ void *loginThread(void *arg)
 			while(fscanf(fp, "%s %s\n", usernames[a], passwords[a])!=EOF){
 				a++;
 			}
-			printf("%d\n", a);
+			//printf("%d\n", a);
 			int i;
 			int c =0;
 			for(i = a; i >=0; i--)
@@ -182,9 +182,9 @@ void *loginThread(void *arg)
 				currUser = findUser(all, nameBuff, &mutex);
 			  	if(currUser) 
 			  	{
-					printf("User exists\n");
+					//printf("User exists\n");
 					if(currUser->loggedIn) {
-				  		write(mySock, "User already logged in.\n", 24);
+				  		write(mySock, "failed", 7);
 				  		continue;
 					}
 					
@@ -200,7 +200,7 @@ void *loginThread(void *arg)
 		            strcpy(currUser->userPass, (char *) passBuff);
 		            currUser->loggedIn = 1;
 		            addNew(all, (void *)currUser, &mutex);
-		            write(currUser->sockNum, "success\n", 8);
+		            write(currUser->sockNum, "success", 8);
 				}
 				else 
 				{  
@@ -215,7 +215,7 @@ void *loginThread(void *arg)
 					sscanf(dataRecv, "%s %s %[^\n]", signbuff, nameBuff, message);         
 					if(!strcmp(signbuff, "private"))
 					{
-						printf("haloo\n");
+						//printf("haloo\n");
 						char user[MAXCHAR];
 						char tmpbuff[MSG];
 						memset(user, 0, MAXCHAR);
@@ -267,72 +267,6 @@ void *loginThread(void *arg)
 		else 
 			write(mySock, "404\n\n", 5);
         recvBuffSize = recv(mySock, dataRecv,MAXRECV, 0);
-	}
-}
-
-void *threadsN(void *arg)
-{
-	pthread_t *thread;
-	UserData *currUser = (UserData *) arg;
-	int recvBuffSize;
-	char signbuff[MAXCHAR];
-	char nameBuff[MAXCHAR];
-	char passBuff[MAXCHAR];
-	char message[MAXCHAR];
-	char dataRecv[MAXRECV];
-	int sendDataLen = 0;
-	
-
-	memset(dataRecv, 0, MAXRECV);
-	recvBuffSize = recv(currUser->sockNum, dataRecv,MAXRECV, 0);
-    while( recvBuffSize!=0 )
-    {                      
-    	sscanf(dataRecv, "%s %s %[^\n]", signbuff, nameBuff, message);         
-		if(!strcmp(signbuff, "private"))
-		{
-			printf("haloo\n");
-			char user[MAXCHAR];
-		    char tmpbuff[MSG];
-		    memset(user, 0, MAXCHAR);
-		    memset(message, 0, MSG);
-
-		    int msglen = strlen(message);
-		    UserData *toUser = findUser(all, nameBuff, &mutex);
-		    printf("%d", toUser->sockNum);
-		    if(toUser && toUser !=currUser)
-		    {
-		    	if(toUser->loggedIn)
-		        {
-		        	write(toUser->sockNum, "\n", 1);
-		            write(toUser->sockNum, message, msglen);
-		            write(toUser->sockNum,"\n\n", 2);
-		        }
-		    }																				
-	   	}
-
-		if(!strcmp(signbuff, "alluser"))
-		{
-			write(currUser->sockNum, "\n",1);
-		    char listAllUser[MAXCHAR*MAXCHAR+MAXCHAR];
-		    memset(listAllUser,0 , MAXCHAR*MAXCHAR+MAXCHAR);
-		    allUser(all, listAllUser,(void *)currUser, &mutex);
-		    sendDataLen = strlen(listAllUser);
-		    write(currUser->sockNum, listAllUser, sendDataLen);
-		    write(currUser->sockNum, "\n", 1);
-		    continue;
-		}
-		if(!strcmp(signbuff, "logout"))
-		{
-			//write(currUser->sockNum, "Logging off.\n", 13);
-			//close(currUser->sockNum);
-		   	
-			//removeItem(names, (void *)thread, &mutex);
-			//removeItem(all, (void *)currUser, &mutex);
-			//removeThread(threads, pthread_self(), &mutex);
-			//free(currUser);
-			//free(thread);
-		}	
-    	recvBuffSize = recv(currUser->sockNum, dataRecv,MAXRECV, 0);
 	}
 }
 
