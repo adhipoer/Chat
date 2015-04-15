@@ -70,7 +70,7 @@ namespace ChatApps
             //form3.Show();
             //this.Hide();
 
-            ctr.cobaCOba();
+            ctr.cobaCoba();
         }
     }
 }

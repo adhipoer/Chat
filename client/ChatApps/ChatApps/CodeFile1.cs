@@ -19,7 +19,7 @@ namespace ChatApps
         
         static List<byte[]> keyList = new List<byte[]>();
 
-        static byte[] nounce = {
+        static byte[] counter = {
             (byte) 0x00, (byte) 0x11, (byte) 0x22, (byte) 0x33,
             (byte) 0x44, (byte) 0x55, (byte) 0x66, (byte) 0x77,
             (byte) 0x88, (byte) 0x99, (byte) 0xAA, (byte) 0xBB,
@@ -75,7 +75,9 @@ namespace ChatApps
             int j = 0;
             for (i = 3; i < 16; i += 4)
             {
+                
                 x[j++] = key[(i + 4) % 16];
+            
             }
             for (i = 0; i < 4; i++)
             {
