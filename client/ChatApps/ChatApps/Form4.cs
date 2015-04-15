@@ -61,7 +61,12 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("private" + " " + otherForm2.TextBox1.ToString() + " " + "pur" + " " + textBox1.Text);
+            String send = CodeFile1.StringToHexString("private" + " " + otherForm2.TextBox1.ToString() + " " + "pur" + " " + textBox1.Text);
+
+            String packet = CodeFile1.Encrypt(send, CodeFile1.initKey, 16);
+
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes(packet);
+
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
         }

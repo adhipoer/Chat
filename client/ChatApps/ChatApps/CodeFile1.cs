@@ -10,7 +10,7 @@ namespace ChatApps
 {
     public static class CodeFile1
     {
-        static byte[] initKey = {
+        public static byte[] initKey = {
             (byte) 0x0F, (byte) 0x47, (byte) 0x0C, (byte) 0xAF,
             (byte) 0x15, (byte) 0xD9, (byte) 0xB7, (byte) 0x7F,
             (byte) 0x71, (byte) 0xE8, (byte) 0xAD, (byte) 0x67,
@@ -230,7 +230,7 @@ namespace ChatApps
             return array;
         }
     
-        static String StringToHexString(String strings) {
+        public static String StringToHexString(String strings) {
             //byte[] temp = string.getBytes();
             
             byte[] temp = Encoding.ASCII.GetBytes(strings);
@@ -350,7 +350,7 @@ namespace ChatApps
         
                 for(i=0; i<temp.Length; i+=32) {
                     //state = ArrayToMatrix(FromHex(temp.Substring(i, i+32)));
-                    state = ArrayToMatrix(nounce);
+                    state = ArrayToMatrix(counter);
                     for(j=0; j<c; j++) {
                         if(j==0) {
                             state = AddRoundKey(state, keyList.ElementAt(j));
@@ -373,7 +373,7 @@ namespace ChatApps
     
         public static void Set(byte[] key, byte[] iv) {
             initKey = key;
-            nounce = iv;
+            counter = iv;
         }
     } 
 }
