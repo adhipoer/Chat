@@ -138,6 +138,9 @@ void *loginThread(void *arg)
 				fprintf(fp, "%s %s\n", nameBuff,passBuff);
             	fclose(fp);
             	write(mySock, "Selamat, anda sudah terdaftar\n", 30);
+                shutdown(mySock, 2);
+				removeThread(threads, pthread_self(), &mutex);
+				free(thread);
 			}
 		}
 
