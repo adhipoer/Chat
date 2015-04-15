@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Threading;
-
+using System.Security.Cryptography;
 namespace ChatApps
 {
     public partial class Form2 : Form
@@ -24,34 +24,21 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            clientSocket.Connect("10.151.36.55", 1234);
+            clientSocket.Connect("10.151.36.206", 1233);
             serverStream = clientSocket.GetStream();
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login " + textBox1.Text + " " + textBox2.Text);
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login " + textBox1.Text + " " + sha256(textBox2.Text + textBox1.Text.Length + textBox1.Text));
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
-            
+
             byte[] inStream = new Byte[256];
             // String to store the response ASCII representation.
             String responseData = String.Empty;
             // Read the first batch of the TcpServer response bytes.
             int bytes = serverStream.Read(inStream, 0, inStream.Length);
             responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
-            
-            if (responseData == "success")
-            {
-                //readData = " " + responseData;
-                Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
-                form4.Show();
-            }
-            else if(responseData == "failed")
-            {
-                MessageBox.Show("anda sudah login");
-                //readData = " " + responseData;
-                Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
-                form4.Show();
-            }
-            else
-                MessageBox.Show("anda siapa?");
+            MessageBox.Show(responseData);
+            Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
+            form4.Show();
 
         }
 
@@ -63,7 +50,17 @@ namespace ChatApps
             }
         }
 
-        
+        static string sha256(string password)
+        {
+            SHA256Managed crypt = new SHA256Managed();
+            string hash = String.Empty;
+            byte[] crypto = crypt.ComputeHash(Encoding.ASCII.GetBytes(password), 0, Encoding.ASCII.GetByteCount(password));
+            foreach (byte bit in crypto)
+            {
+                hash += bit.ToString("x2");
+            }
+            return hash;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             Form3 form3 = new Form3();

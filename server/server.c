@@ -188,7 +188,7 @@ void *loginThread(void *arg)
 					//printf("User exists\n");
 					if(currUser->loggedIn) {
 				  		write(mySock, "failed", 7);
-				  		continue;
+				  		//continue;
 					}
 					
 					newUser=0;
@@ -247,7 +247,7 @@ void *loginThread(void *arg)
 						sendDataLen = strlen(listAllUser);
 						write(currUser->sockNum, listAllUser, sendDataLen);
 						write(currUser->sockNum, "\n", 1);
-						//continue;
+						continue;
 					}
 					else if(!strcmp(signbuff, "logout"))
 					{

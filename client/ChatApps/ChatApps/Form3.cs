@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace ChatApps
 {
@@ -25,9 +26,9 @@ namespace ChatApps
 
         private void button1_Click(object sender, EventArgs e)
         {
-            clientSocket.Connect("10.151.36.55", 1234);
+            clientSocket.Connect("10.151.36.206", 1233);
             serverStream = clientSocket.GetStream();
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("register" + " " + textBox1.Text + " " + textBox2.Text);
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("register" + " " + textBox1.Text + " " + sha256(textBox2.Text + textBox1.Text.Length + textBox1.Text));
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
             byte[] inStream = new Byte[256];
@@ -40,7 +41,22 @@ namespace ChatApps
             this.Close();
             Form2 form2 = new Form2();
             form2.Show();
-            
+
+        }
+        static string sha256(string password)
+        {
+            SHA256Managed crypt = new SHA256Managed();
+            string hash = String.Empty;
+            byte[] crypto = crypt.ComputeHash(Encoding.ASCII.GetBytes(password), 0, Encoding.ASCII.GetByteCount(password));
+            foreach (byte bit in crypto)
+            {
+                hash += bit.ToString("x2");
+            }
+            return hash;
+        }
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
