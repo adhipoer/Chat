@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Text;
 using System.Net.Sockets;
 using System.Threading;
 using System.Security.Cryptography;
@@ -26,9 +25,11 @@ namespace ChatApps
 
         private void button1_Click(object sender, EventArgs e)
         {
-            clientSocket.Connect("10.151.36.206", 1233);
+            clientSocket.Connect("10.151.36.206", 1234);
             serverStream = clientSocket.GetStream();
-            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("register" + " " + textBox1.Text + " " + sha256(textBox2.Text + textBox1.Text.Length + textBox1.Text));
+            //MessageBox.Show(Convert.ToString(textBox1.Text.Length));
+
+            byte[] outStream = System.Text.Encoding.ASCII.GetBytes("register" + " " + textBox1.Text + " " + sha256(textBox2.Text + Convert.ToString(textBox1.Text.Length) + textBox1.Text));
             serverStream.Write(outStream, 0, outStream.Length);
             serverStream.Flush();
             byte[] inStream = new Byte[256];
@@ -41,7 +42,6 @@ namespace ChatApps
             this.Close();
             Form2 form2 = new Form2();
             form2.Show();
-
         }
         static string sha256(string password)
         {

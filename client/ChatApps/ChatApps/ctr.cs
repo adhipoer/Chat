@@ -61,38 +61,36 @@ namespace ChatApps
         
         public static void cobaCoba(byte[] dafuc)
         {
-            String baru = ByteArrayToHexString(dafuq);
+            String baru = ByteArrayToHexString(dafuc);
             char[] baru2 = baru.ToCharArray();
-            int len = baru2.Length;
-            for (int l = 0; l < 100; l++)
+
+            for(int x=0; x<10; x++)
             {
+                int len = baru.Length;
+                int y = 0, z = len - 1;
+                
                 char[] baru4 = baru2;
-                int x = 0, y = len - 1;
-                Console.WriteLine(len);
+
                 do
                 {
-                    x = Counter(baru2[y], out baru4[y]);
-                    Console.WriteLine("x:ar{0} y:{1}", baru2[y], baru4[y]);
+                    x = Counter(baru2[z], out baru4[z]);
+                    Console.WriteLine(baru4[y]);
                     y--;
-                } while (x == 1 && y != -1);
-                System.Buffer.BlockCopy(baru2, 0, baru2, 0, baru2.Length);
-                string s2 = new string(baru2);
-                cobaCoba(FromHex(s2));
-                //Console.WriteLine(baru3);
-                //Console.WriteLine(baru5);
-                //Console.WriteLine(len);
+                }while (y == 1 && y != 1);
+
             }
-            //y = len - 1;
-            //do
-            //{
-            //    x = Counter(baru4[y], out baru2[y]);
-            //    Console.WriteLine("x:{0} y:{1}", baru4[y], baru2[y]);
-            //    y--;
-            //} while (x == 1 && y != -1);
-            //baru3 = new String(baru4);
-            //baru = new String(baru2);
-            //Console.WriteLine(baru);
-            //Console.WriteLine(baru3);
         }
     }
 }
+
+//y = len - 1;
+//do
+//{
+//    x = Counter(baru4[y], out baru2[y]);
+//    Console.WriteLine("x:{0} y:{1}", baru4[y], baru2[y]);
+//    y--;
+//} while (x == 1 && y != -1);
+//baru3 = new String(baru4);
+//baru = new String(baru2);
+//Console.WriteLine(baru);
+//Console.WriteLine(baru3);

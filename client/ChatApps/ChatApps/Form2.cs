@@ -24,7 +24,7 @@ namespace ChatApps
 
         private void button2_Click(object sender, EventArgs e)
         {
-            clientSocket.Connect("10.151.36.206", 1233);
+            clientSocket.Connect("10.151.36.206", 1234);
             serverStream = clientSocket.GetStream();
             byte[] outStream = System.Text.Encoding.ASCII.GetBytes("login " + textBox1.Text + " " + sha256(textBox2.Text + textBox1.Text.Length + textBox1.Text));
             serverStream.Write(outStream, 0, outStream.Length);
@@ -37,7 +37,8 @@ namespace ChatApps
             int bytes = serverStream.Read(inStream, 0, inStream.Length);
             responseData = System.Text.Encoding.ASCII.GetString(inStream, 0, bytes);
             MessageBox.Show(responseData);
-            Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
+            //Form4 form4 = new Form4(serverStream, readData, textBox1.Text);
+            Form4 form4 = new Form4();
             form4.Show();
 
         }
@@ -63,9 +64,9 @@ namespace ChatApps
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            Form3 form3 = new Form3();
-            form3.Show();
-            this.Hide();
+            //Form3 form3 = new Form3();
+            //form3.Show();
+            //this.Hide();
 
             //ctr.cobaCoba();
             //CodeFile1.Encrypt();
